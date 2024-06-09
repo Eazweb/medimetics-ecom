@@ -10,6 +10,10 @@ const ToastCartButton = ({ product }: any) => {
       description: `${product.name} was added to your cart`,
       variant: "default",
       duration: 1500,
+      style: {
+        backgroundColor: "#1B1212",
+        color: "#fff",
+      },
     });
   };
   return (
