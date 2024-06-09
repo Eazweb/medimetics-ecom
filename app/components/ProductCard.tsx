@@ -10,8 +10,8 @@ const ProductCard = async ({ product }: any) => {
       <div className="relative overflow-hidden rounded-lg shadow-lg group">
         <div className="w-full h-84 overflow-hidden">
           <Image
-            width={300}
-            height={500}
+            width={1000}
+            height={1200}
             src={product.image}
             alt={product.name}
             placeholder="blur"
@@ -19,8 +19,8 @@ const ProductCard = async ({ product }: any) => {
             className="w-full h-full object-cover transition-transform duration-100 ease-in-out group-hover:opacity-0"
           />
           <Image
-            width={300}
-            height={500}
+            width={1000}
+            height={1200}
             src={product.hoverImage}
             alt={product.name}
             placeholder="blur"
