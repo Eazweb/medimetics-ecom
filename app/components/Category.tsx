@@ -2,136 +2,69 @@ import { Link } from "next-view-transitions";
 import Image from "next/image";
 import React from "react";
 
+const categories = [
+  {
+    label: "Men",
+    imageUrl:
+      "https://i.ibb.co/ThPFmzv/omid-armin-m-VSb6-PFk-VXw-unsplash-1-1.png",
+    altText: "men-image",
+    blurDataURL: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...",
+  },
+  {
+    label: "Women",
+    imageUrl:
+      "https://i.ibb.co/PTtRBLL/olive-tatiane-Im-Ez-F9-B91-Mk-unsplash-1.png",
+    altText: "women-image",
+    blurDataURL: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...",
+  },
+  {
+    label: "Children",
+    imageUrl:
+      "https://i.ibb.co/SXZvYHs/irene-kredenets-DDqx-X0-7v-KE-unsplash-1.png",
+    altText: "children-image",
+    blurDataURL: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...",
+  },
+];
+
 const Category = () => {
   return (
-    <div className="pb-16">
-      <div className="flex justify-center items-center">
-        <div className="2xl:mx-auto 2xl:container py-12 px-4 sm:px-6 xl:px-20 2xl:px-0 w-full">
-          <div className="flex flex-col jusitfy-center items-center space-y-10">
-            <div className="flex flex-col justify-center items-center space-y-2">
-              <h1 className="text-3xl xl:text-4xl font-semibold leading-7 xl:leading-9 text-gray-800">
-                New Collection
-              </h1>
-              <p className="text-xl leading-5 text-gray-600">
-                For unique and stylish clothing, shoes and accessories in the
-                collection you can select the best one for you.
-              </p>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 md:gap-x-8 w-full">
-              <div className="relative group flex justify-center items-center h-full w-full">
-                <Image
-                  width={700}
-                  height={700}
-                  className="object-center object-cover h-full w-full"
-                  src="https://i.ibb.co/ThPFmzv/omid-armin-m-VSb6-PFk-VXw-unsplash-1-1.png"
-                  alt="girl-image"
-                />
-                <Link
-                  href={"/"}
-                  className="focus:outline-none text-center focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 bottom-4 z-10 absolute text-base font-medium leading-none text-gray-800 py-3 w-36 bg-white"
-                >
-                  Women
-                </Link>
-                <div className="absolute opacity-0 group-hover:opacity-100 transition duration-500 bottom-3 py-6 z-0 px-20 w-36 bg-white bg-opacity-50" />
-              </div>
-              <div className="flex flex-col space-y-4 md:space-y-8 mt-4 md:mt-0">
-                <div className="relative group flex justify-center items-center h-full w-full">
-                  <Image
-                    width={700}
-                    height={700}
-                    className="object-center object-cover h-full w-full"
-                    src="https://i.ibb.co/SXZvYHs/irene-kredenets-DDqx-X0-7v-KE-unsplash-1.png"
-                    alt="shoe-image"
-                  />
-                  <Link
-                    href={"/"}
-                    className="focus:outline-none text-center focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 bottom-4 z-10 absolute text-base font-medium leading-none text-gray-800 py-3 w-36 bg-white"
-                  >
-                    Shoes
-                  </Link>
-                  <div className="absolute opacity-0 group-hover:opacity-100 transition duration-500 bottom-3 py-6 z-0 px-20 w-36 bg-white bg-opacity-50" />
-                </div>
-                <div className="relative group flex justify-center items-center h-full w-full">
-                  <Image
-                    width={700}
-                    height={700}
-                    className="object-center object-cover h-full w-full"
-                    src="https://i.ibb.co/Hd1pVxW/louis-mornaud-Ju-6-TPKXd-Bs-unsplash-1-2.png"
-                    alt="watch-image"
-                  />
-                  <Link
-                    href={"/"}
-                    className="focus:outline-none text-center focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 bottom-4 z-10 absolute text-base font-medium leading-none text-gray-800 py-3 w-36 bg-white"
-                  >
-                    Watches
-                  </Link>
-                  <div className="absolute opacity-0 group-hover:opacity-100 transition duration-500 bottom-3 py-6 z-0 px-20 w-36 bg-white bg-opacity-50" />
-                </div>
-              </div>
-              <div className="relative group justify-center items-center h-full w-full hidden lg:flex">
-                <Image
-                  width={700}
-                  height={700}
-                  className="object-center object-cover h-full w-full"
-                  src="https://i.ibb.co/PTtRBLL/olive-tatiane-Im-Ez-F9-B91-Mk-unsplash-1.png"
-                  alt="girl-image"
-                />
-                <Link
-                  href={"/"}
-                  className="focus:outline-none text-center focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 bottom-4 z-10 absolute text-base font-medium leading-none text-gray-800 py-3 w-36 bg-white"
-                >
-                  Women
-                </Link>
-                <div className="absolute opacity-0 group-hover:opacity-100 transition duration-500 bottom-3 py-6 z-0 px-20 w-36 bg-white bg-opacity-50" />
-              </div>
-              <div className="relative group flex justify-center items-center h-full w-full mt-4 md:hidden md:mt-8 lg:hidden">
-                <Image
-                  width={700}
-                  height={700}
-                  className="object-center object-cover h-full w-full hidden md:block"
-                  src="https://i.ibb.co/6FjW19n/olive-tatiane-Im-Ez-F9-B91-Mk-unsplash-2.png"
-                  alt="girl-image"
-                />
-                <Image
-                  width={700}
-                  height={700}
-                  className="object-center object-cover h-full w-full md:hidden"
-                  src="https://i.ibb.co/sQgHwHn/olive-tatiane-Im-Ez-F9-B91-Mk-unsplash-1.png"
-                  alt="olive-tatiane-Im-Ez-F9-B91-Mk-unsplash-2"
-                />
-                <Link
-                  href={"/"}
-                  className="focus:outline-none text-center focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 bottom-4 z-10 absolute text-base font-medium leading-none text-gray-800 py-3 w-36 bg-white"
-                >
-                  Women
-                </Link>
-                <div className="absolute opacity-0 group-hover:opacity-100 transition duration-500 bottom-3 py-6 z-0 px-20 w-36 bg-white bg-opacity-50" />
-              </div>
-            </div>
-            <div className="relative group hidden md:flex justify-center items-center h-full w-full mt-4 md:mt-8 lg:hidden">
+    <div className="bg-gray-100 py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-12">
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 mb-4">
+            New Collection
+          </h1>
+          <p className="text-lg text-gray-600">
+            Discover our unique and stylish collection of clothing, shoes, and
+            accessories. Find the perfect items to elevate your style.
+          </p>
+        </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+          {categories.map((category, index) => (
+            <div
+              key={index}
+              className="relative group rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105"
+            >
               <Image
-                width={700}
-                height={700}
-                className="object-center object-cover h-full w-full hidden md:block"
-                src="https://i.ibb.co/6FjW19n/olive-tatiane-Im-Ez-F9-B91-Mk-unsplash-2.png"
-                alt="girl-image"
+                width={600}
+                height={400}
+                className="object-cover w-full h-64 md:h-80 lg:h-96"
+                src={category.imageUrl}
+                alt={category.altText}
+                placeholder="blur"
+                blurDataURL={category.blurDataURL}
               />
-              <Image
-                width={700}
-                height={700}
-                className="object-center object-cover h-full w-full sm:hidden"
-                src="https://i.ibb.co/sQgHwHn/olive-tatiane-Im-Ez-F9-B91-Mk-unsplash-1.png"
-                alt="olive-tatiane-Im-Ez-F9-B91-Mk-unsplash-2"
-              />
-              <Link
-                href={"/"}
-                className="focus:outline-none text-center focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 bottom-4 z-10 absolute text-base font-medium leading-none text-gray-800 py-3 w-36 bg-white"
-              >
-                Women
-              </Link>
-              <div className="absolute opacity-0 group-hover:opacity-100 transition duration-500 bottom-3 py-6 z-0 px-20 w-36 bg-white bg-opacity-50" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+              <div className="absolute bottom-0 left-0 right-0 p-6">
+                <Link
+                  href="/"
+                  className="inline-block bg-white text-gray-800 font-semibold py-2 px-4 rounded-md transition duration-300 hover:bg-gray-800 hover:text-white"
+                >
+                  {category.label}
+                </Link>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>
