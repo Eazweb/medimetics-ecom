@@ -11,7 +11,7 @@ const ToastCartButton = ({ product }: any) => {
       variant: "default",
       duration: 1500,
       style: {
-        backgroundColor: "#1B1212",
+        backgroundColor: "#191919",
         color: "#fff",
       },
     });
