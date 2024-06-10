@@ -41,7 +41,8 @@ const Category = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {categories.map((category, index) => (
-            <div
+            <Link
+              href={"/"}
               key={index}
               className="relative group rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105"
             >
@@ -56,14 +57,11 @@ const Category = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-6">
-                <Link
-                  href="/"
-                  className="inline-block bg-white text-gray-800 font-semibold py-2 px-4 rounded-md transition duration-300 hover:bg-gray-800 hover:text-white"
-                >
+                <span className="inline-block cursor-pointer bg-white text-gray-800 font-semibold py-2 px-4 rounded-md transition duration-300 hover:bg-gray-800 hover:text-white">
                   {category.label}
-                </Link>
+                </span>
               </div>
-            </div>
+            </Link>
           ))}
         </div>
       </div>
