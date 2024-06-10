@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
 import ProductCard from "@/app/components/ProductCard";
-import { products } from "@/app/shop/shop";
+import { products } from "@/app/temp/shop";
 import { Grid, List } from "lucide-react";
 
 const AllProducts = () => {
@@ -32,15 +32,19 @@ const AllProducts = () => {
         <div className="flex gap-3 items-center">
           <Grid
             size={24}
-            className={`text-gray-600 hover:text-gray-800 cursor-pointer ${
-              viewMode === "grid" && "text-gray-800"
+            className={`text-gray-600 hover:text-gray-500 cursor-pointer ${
+              viewMode === "grid"
+                ? "bg-gray-800 text-white p-[3px] rounded"
+                : ""
             }`}
             onClick={() => setViewMode("grid")}
           />
           <List
             size={24}
-            className={`text-gray-600 hover:text-gray-800 cursor-pointer ${
-              viewMode === "list" && "text-gray-800"
+            className={`text-gray-600 hover:text-gray-500 cursor-pointer ${
+              viewMode === "list"
+                ? "bg-gray-800 text-white p-[3px] rounded"
+                : ""
             }`}
             onClick={() => setViewMode("list")}
           />
