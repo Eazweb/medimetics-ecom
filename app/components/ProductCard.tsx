@@ -23,7 +23,7 @@ const ProductCard = ({ product }: any) => {
             className="w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-100 ease-in-out opacity-0 group-hover:opacity-100"
           />
         </Link>
-        <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-100 ease-in-out sm:opacity-100">
+        <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black via-transparent to-transparent group-hover:opacity-100 transition-opacity duration-100 ease-in-out opacity-100">
           <h2 className="text-white text-xl font-semibold">{product.name}</h2>
           <p className="text-white text-lg">₹{product.price}</p>
           <ToastCartButton product={product} />
