@@ -4,7 +4,6 @@ import { ShoppingBag } from "lucide-react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import ShoppingCart from "./ShoppingCart";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
@@ -141,11 +140,16 @@ const Navbar = () => {
               <Button>Login</Button>
             </Link>
           ) : (
-            <ShoppingBag
-              size={24}
-              className="hidden md:inline-flex mx-2 cursor-pointer hover:text-gray-700"
-              onClick={() => navigate.push("/cart")}
-            />
+            <div className="">
+              <ShoppingBag
+                size={24}
+                className="hidden md:inline-flex mx-2 cursor-pointer hover:text-gray-700"
+                onClick={() => navigate.push("/cart")}
+              />
+              <Button className="hidden md:inline-flex items-center justify-center mx-2">
+                Logout
+              </Button>
+            </div>
           )}
         </div>
       </nav>
