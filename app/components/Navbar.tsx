@@ -7,13 +7,11 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 const Navbar = () => {
-  const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [currentMessageIndex, setCurrentMessageIndex] = useState<number>(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const Auth = false;
+  const toggleDropdown = () => setIsOpen(!isOpen);
 
-  const toggleDropdown = () => {
-    setIsOpen(!isOpen);
-  };
   const messages = [
     "Free shipping on orders over ₹399!",
     "20% off your first purchase!",
@@ -21,26 +19,28 @@ const Navbar = () => {
     "Exclusive deals for members only!",
     "Shop the latest trends with us!",
   ];
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentMessageIndex((prevIndex) => (prevIndex + 1) % messages.length);
     }, 2500);
-
     return () => clearInterval(interval);
   }, [messages.length]);
-  const navigate = useRouter();
+
+  const router = useRouter();
+
   return (
     <>
-      <span className="w-full p-1 text-center bg-gradient-to-r from-indigo-800 to-black block rtl:from-indigo-800 rtl:to-black">
+      <div className="w-full p-1 text-center bg-gradient-to-r from-indigo-800 to-black">
         <span className="text-sm sm:text-sm tracking-widest font-semibold glowing-text">
           {messages[currentMessageIndex]}
         </span>
-      </span>
-      <nav className="bg-white border-2 md:border-0">
-        <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto">
+      </div>
+      <nav className="bg-white border-b-2 md:border-none">
+        <div className="max-w-screen-xl mx-auto flex items-center justify-between flex-wrap">
           <Link
             href="/"
-            className="flex items-center  rtl:space-x-reverse"
+            className="flex items-center"
             onClick={() => setIsOpen(false)}
           >
             <Image src="/logo.png" alt="logo" width={70} height={50} />
@@ -48,12 +48,9 @@ const Navbar = () => {
               Smart Shop
             </span>
           </Link>
-
           <button
             onClick={toggleDropdown}
-            data-collapse-toggle="navbar-default"
-            type="button"
-            className="inline-flex mx-4 border-2 items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 "
+            className="inline-flex items-center p-2 text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 m-2"
             aria-controls="navbar-default"
             aria-expanded={isOpen}
           >
@@ -75,15 +72,16 @@ const Navbar = () => {
             </svg>
           </button>
           <div
-            className={`w-full md:block md:w-auto ${isOpen ? "" : "hidden"}`}
+            className={`w-full md:flex md:w-auto ${
+              isOpen ? "block" : "hidden"
+            }`}
             id="navbar-default"
           >
-            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-200 md:flex-row md:space-x-8 rtl:space-x-reverse md:mt-0 md:border-0 md:bg-white ">
+            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-200 md:flex-row md:space-x-8 md:mt-0 md:border-none md:bg-white">
               <li>
                 <Link
                   href="/"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0  "
-                  aria-current="page"
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
                   onClick={() => setIsOpen(false)}
                 >
                   Home
@@ -93,7 +91,7 @@ const Navbar = () => {
                 <Link
                   href="/products"
                   onClick={() => setIsOpen(false)}
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 "
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
                 >
                   Shop
                 </Link>
@@ -102,55 +100,45 @@ const Navbar = () => {
                 <Link
                   href="/"
                   onClick={() => setIsOpen(false)}
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 "
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
                 >
                   Category
                 </Link>
               </li>
-
               <li>
                 <Link
                   href="/order"
                   onClick={() => setIsOpen(false)}
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-gray-700 md:p-0 "
+                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
                 >
                   Order
                 </Link>
               </li>
-              {!Auth ? (
-                <li>
-                  <Link
-                    href={"/login"}
-                    className="md:hidden inline-flex items-center justify-center w-full my-2"
-                  >
-                    <Button className="w-full">Login</Button>
-                  </Link>
-                </li>
-              ) : (
-                ""
-              )}
             </ul>
           </div>
-
-          {Auth ? (
-            <Link
-              href="/login"
-              className="hidden md:inline-flex items-center justify-center mx-2"
-            >
-              <Button>Login</Button>
-            </Link>
-          ) : (
-            <div className="">
-              <ShoppingBag
-                size={24}
-                className="hidden md:inline-flex mx-2 cursor-pointer hover:text-gray-700"
-                onClick={() => navigate.push("/cart")}
-              />
-              <Button className="hidden md:inline-flex items-center justify-center mx-2">
-                Logout
-              </Button>
-            </div>
-          )}
+          <div className="flex items-center">
+            {Auth ? (
+              <>
+                <ShoppingBag
+                  size={24}
+                  className=" mx-2 cursor-pointer hover:text-gray-700"
+                  onClick={() => router.push("/cart")}
+                />
+                <Button
+                  className="m-2"
+                  onClick={() => {
+                    /* Logout logic */
+                  }}
+                >
+                  Logout
+                </Button>
+              </>
+            ) : (
+              <Link href="/login" className=" items-center justify-center m-2">
+                <Button>Login</Button>
+              </Link>
+            )}
+          </div>
         </div>
       </nav>
     </>
