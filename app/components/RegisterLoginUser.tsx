@@ -82,30 +82,30 @@ const RegisterLoginUser = () => {
               <p className="text-red-500">Please enter a valid email address</p>
             )}
           </div>
-          <div className="mb-6 relative">
+          <div className="mb-6">
             <label
-              className="block text-base font-semibold text-blue-gray-900 mb-1"
+              className="block text-base font-semibold text-blue-gray-900 mb-1 relative"
               htmlFor="password"
             >
               Password
+              <input
+                id="password"
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                {...register("password", {
+                  required: true,
+                  minLength: 6,
+                  pattern: /^(?=.*[!@#$%^&*])/,
+                })}
+                className="w-full px-3 py-2 border font-normal rounded-md bg-blue-gray-50 focus:outline-none focus:border-blue-500 pr-10"
+              />
+              <div
+                className="absolute inset-y-0 right-0 top-[40%] flex items-center pr-3 cursor-pointer"
+                onClick={togglePasswordVisibility}
+              >
+                {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
+              </div>
             </label>
-            <input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter your password"
-              {...register("password", {
-                required: true,
-                minLength: 6,
-                pattern: /^(?=.*[!@#$%^&*])/,
-              })}
-              className="w-full px-3 py-2 border rounded-md bg-blue-gray-50 focus:outline-none focus:border-blue-500 pr-10"
-            />
-            <div
-              className="absolute inset-y-0 right-0 top-[40%] flex items-center pr-3 cursor-pointer"
-              onClick={togglePasswordVisibility}
-            >
-              {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
-            </div>
             {errors.password && errors.password.type === "required" && (
               <p className="text-red-500">Password is required</p>
             )}
