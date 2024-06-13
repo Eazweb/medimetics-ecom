@@ -1,5 +1,5 @@
 import { prismaDB } from "@/db/db.config";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 
 export const GET = async (_: any, { params }: { params: { id: string } }) => {
   try {
