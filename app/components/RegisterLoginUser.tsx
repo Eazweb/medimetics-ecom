@@ -73,13 +73,18 @@ const RegisterLoginUser = () => {
               type="email"
               placeholder="Enter your email"
               {...register("email", {
-                required: true,
-                pattern: /^\S+@\S+\.\S+$/,
+                required: "Email is required",
+                pattern: {
+                  value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                  message: "Please enter a valid email address",
+                },
               })}
               className="w-full px-3 py-2 border rounded-md bg-blue-gray-50 focus:outline-none focus:border-blue-500"
             />
             {errors.email && (
-              <p className="text-red-500">Please enter a valid email address</p>
+              <p className="text-red-500">
+                {errors.email.message || "Email is required"}
+              </p>
             )}
           </div>
           <div className="mb-6">
@@ -93,9 +98,16 @@ const RegisterLoginUser = () => {
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
                 {...register("password", {
-                  required: true,
-                  minLength: 6,
-                  pattern: /^(?=.*[!@#$%^&*])/,
+                  required: "Password is required",
+                  minLength: {
+                    value: 8,
+                    message: "Password must be at least 8 characters long",
+                  },
+                  pattern: {
+                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/,
+                    message:
+                      "Password must include an uppercase letter, a lowercase letter, a number, and a special character",
+                  },
                 })}
                 className="w-full px-3 py-2 border font-normal rounded-md bg-blue-gray-50 focus:outline-none focus:border-blue-500 pr-10"
               />
@@ -106,18 +118,8 @@ const RegisterLoginUser = () => {
                 {showPassword ? <AiOutlineEyeInvisible /> : <AiOutlineEye />}
               </div>
             </label>
-            {errors.password && errors.password.type === "required" && (
-              <p className="text-red-500">Password is required</p>
-            )}
-            {errors.password && errors.password.type === "minLength" && (
-              <p className="text-red-500">
-                Password must be at least 6 characters
-              </p>
-            )}
-            {errors.password && errors.password.type === "pattern" && (
-              <p className="text-red-500">
-                Password must contain at least one special character
-              </p>
+            {errors.password && (
+              <p className="text-red-500">{errors.password.message}</p>
             )}
           </div>
           <button
