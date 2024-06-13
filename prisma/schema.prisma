@@ -13,44 +13,30 @@ model User {
   email     String    @unique
   password  String
   isAdmin   Boolean   @default(false)
-  products  Product[]
-  createdAt DateTime  @default(now()) @map("createdAt")
-  updatedAt DateTime  @updatedAt @map("updatedAt")
+  products  Product[] 
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 }
 
 model Product {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
   price       Float
+  mainImage   String
   quantity    Int
-  image       String
-  userId      String?   @db.ObjectId
-  createdBy   User?     @relation(fields: [userId], references: [id])
-  createdAt   DateTime  @default(now()) @map("createdAt")
-  updatedAt   DateTime  @updatedAt @map("updatedAt")
-  sizeId      String?   @db.ObjectId
-  colorId     String?   @db.ObjectId
-  categoryId  String?    @db.ObjectId
-  size        Size?     @relation(fields: [sizeId], references: [id])
-  color       Color?    @relation(fields: [colorId], references: [id])
-  category    Category? @relation(fields: [categoryId], references: [id]) 
-}
-
-model Size {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  name      String    // Example: "Small", "Medium", "Large"
-  products  Product[] 
-}
-
-model Color {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  name      String    // Example: "Red", "Blue", "Green"
-  products  Product[] 
+  otherImages String[]
+  sizes       String[]
+  colors      String[]
+  categories  Category[]  
+  userId      String     @db.ObjectId
+  user        User      @relation(fields: [userId], references: [id])
+  
 }
 
 model Category {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  name      String    // Example: "Electronics", "Clothing", "Accessories"
-  products  Product[] // Relation to Product
+  name      String
+  productId String    @db.ObjectId
+  products  Product @relation(fields: [productId], references: [id])
 }
