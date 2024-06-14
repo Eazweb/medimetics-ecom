@@ -13,12 +13,6 @@ export const POST = async (req: NextRequest) => {
         status: 400,
       });
     }
-    if (!quantity || quantity < 1) {
-      return NextResponse.json({
-        error: "Valid quantity is required",
-        status: 400,
-      });
-    }
 
     // Check if the user exists
     const userExists = await prismaDB.user.findUnique({
@@ -46,19 +40,47 @@ export const POST = async (req: NextRequest) => {
       });
     }
 
-    // Create cart item if both user and product exist
-    const cartItem = await prismaDB.cart.create({
-      data: {
+    // Check if the cart item already exists for the user and product
+    const existingCartItem = await prismaDB.cart.findFirst({
+      where: {
         userId,
         productId,
-        quantity,
       },
     });
-    return NextResponse.json({
-      message: "Product added to cart",
-      status: 201,
-      data: cartItem,
-    });
+
+    if (existingCartItem) {
+      // Calculate the new quantity
+      const newQuantity = existingCartItem.quantity + quantity;
+
+      // If exists, update the quantity
+      const updatedCartItem = await prismaDB.cart.update({
+        where: {
+          id: existingCartItem.id,
+        },
+        data: {
+          quantity: newQuantity, // Ensure this is a valid number and not undefined
+        },
+      });
+      return NextResponse.json({
+        message: "Cart item quantity updated",
+        status: 200,
+        data: updatedCartItem,
+      });
+    } else {
+      // If not, create a new cart item
+      const newCartItem = await prismaDB.cart.create({
+        data: {
+          userId,
+          productId,
+          quantity,
+        },
+      });
+      return NextResponse.json({
+        message: "Product added to cart",
+        status: 201,
+        data: newCartItem,
+      });
+    }
   } catch (error) {
     console.error(error);
     return NextResponse.json({
