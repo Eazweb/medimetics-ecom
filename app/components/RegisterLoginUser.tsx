@@ -32,7 +32,7 @@ const RegisterLoginUser = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-white">
+    <div className="flex justify-center items-center h-screen bg-white movingGradient">
       <div className="bg-white shadow-lg rounded-xl p-8 form-container">
         <h4 className="text-2xl font-semibold text-blue-gray-900 mb-2">
           {isLogin ? "Login" : "Sign Up"}
