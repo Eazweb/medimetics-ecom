@@ -58,7 +58,7 @@ export const POST = async (req: NextRequest) => {
           id: existingCartItem.id,
         },
         data: {
-          quantity: newQuantity, // Ensure this is a valid number and not undefined
+          quantity: newQuantity,
         },
       });
       return NextResponse.json({
