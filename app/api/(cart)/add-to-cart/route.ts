@@ -2,7 +2,7 @@ import { prismaDB } from "@/db/db.config";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
-  const { userId, productId } = await req.json();
+  const { userId, productId, quantity } = await req.json();
   try {
     if (!userId) {
       return NextResponse.json({ error: "User ID is required", status: 400 });
@@ -10,6 +10,12 @@ export const POST = async (req: NextRequest) => {
     if (!productId) {
       return NextResponse.json({
         error: "Product ID is required",
+        status: 400,
+      });
+    }
+    if (!quantity || quantity < 1) {
+      return NextResponse.json({
+        error: "Valid quantity is required",
         status: 400,
       });
     }
@@ -45,6 +51,7 @@ export const POST = async (req: NextRequest) => {
       data: {
         userId,
         productId,
+        quantity,
       },
     });
     return NextResponse.json({
@@ -53,7 +60,7 @@ export const POST = async (req: NextRequest) => {
       data: cartItem,
     });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return NextResponse.json({
       error: "Something went wrong while adding product to cart",
       status: 500,
