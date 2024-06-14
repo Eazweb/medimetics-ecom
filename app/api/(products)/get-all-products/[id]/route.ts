@@ -10,6 +10,7 @@ export const GET = async (_: any, { params }: { params: { id: string } }) => {
       include: {
         categories: {
           select: {
+            id: true,
             name: true,
           },
         },
