@@ -1,5 +1,4 @@
 import { prismaDB } from "@/db/db.config";
-import { stat } from "fs";
 import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
