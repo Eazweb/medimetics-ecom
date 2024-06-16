@@ -6,6 +6,7 @@ import { ViewTransitions } from "next-view-transitions";
 import Footer from "./components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
+import ReduxProvider from "@/providers/ReduxProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -25,10 +26,12 @@ export default function RootLayout({
       <html lang="en">
         <body className={inter.className}>
           <NextAuthSessionProvider>
-            <Navbar />
-            {children}
-            <Toaster />
-            <Footer />
+            <ReduxProvider>
+              <Navbar />
+              {children}
+              <Toaster />
+              <Footer />
+            </ReduxProvider>
           </NextAuthSessionProvider>
         </body>
       </html>
