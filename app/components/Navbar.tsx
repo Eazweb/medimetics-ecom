@@ -5,12 +5,13 @@ import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
-  const Auth = false;
   const toggleDropdown = () => setIsOpen(!isOpen);
+  const { data: session } = useSession();
 
   const messages = [
     "Free shipping on orders over ₹399!",
@@ -107,7 +108,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link
-                  href="/order"
+                  href={`${session && session?.user ? "/order" : "/login"}`}
                   onClick={() => setIsOpen(false)}
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
                 >
@@ -117,17 +118,22 @@ const Navbar = () => {
             </ul>
           </div>
           <div className="flex items-center">
-            {Auth ? (
+            {session && session?.user ? (
               <>
                 <ShoppingBag
                   size={24}
                   className=" mx-2 cursor-pointer hover:text-gray-700"
-                  onClick={() => router.push("/cart")}
+                  onClick={() => {
+                    router.push("/cart");
+                    setIsOpen(false);
+                  }}
                 />
                 <Button
                   className="m-2"
                   onClick={() => {
-                    /* Logout logic */
+                    signOut({
+                      callbackUrl: "/login",
+                    });
                   }}
                 >
                   Logout
