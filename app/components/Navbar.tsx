@@ -7,11 +7,17 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
+interface User {
+  isAdmin: boolean;
+}
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const toggleDropdown = () => setIsOpen(!isOpen);
   const { data: session } = useSession();
+
+  const Admin =
+    session && session.user ? (session.user as User).isAdmin : false;
 
   const messages = [
     "Free shipping on orders over ₹399!",
@@ -115,6 +121,19 @@ const Navbar = () => {
                   Order
                 </Link>
               </li>
+              {Admin && (
+                <li>
+                  <Link
+                    href={`${
+                      session && session?.user ? "/dashboard" : "/login"
+                    }`}
+                    onClick={() => setIsOpen(false)}
+                    className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
           <div className="flex items-center">

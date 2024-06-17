@@ -64,10 +64,19 @@ export const authOptions = {
     }),
   ],
   callbacks: {
-    jwt: async ({ token }) => {
+    jwt: async ({ token, user }) => {
+      if (user) {
+        token.user = user;
+        token.isAdmin = user.isAdmin;
+      }
       return token;
     },
-    session: async ({ session }) => {
+
+    session: async ({ session, token }) => {
+      if (session.user) {
+        session.user.id = token.sub;
+        session.user.isAdmin = token.isAdmin;
+      }
       return session;
     },
   },
