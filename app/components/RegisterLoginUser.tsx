@@ -3,28 +3,73 @@ import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
+import { signIn } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
+import { useAppDispatch } from "@/providers/toolkit/hooks/hooks";
+import { registerUser } from "@/providers/toolkit/features/RegisterUserSlice";
 
 interface SignupProps {
-  name?: string;
+  name: string;
   email: string;
   password: string;
 }
 
 const RegisterLoginUser = () => {
-  const [showPassword, setShowPassword] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
+  const [showPassword, setShowPassword] = useState<Boolean>(false);
+  const [isLogin, setIsLogin] = useState<Boolean>(false);
+  const { toast } = useToast();
+  const route = useRouter();
+  const dispatch = useAppDispatch();
   const {
     register,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<SignupProps>();
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  const onSubmit = (data: SignupProps) => {
-    console.log(data);
+  const onSubmit = async (data: SignupProps) => {
+    if (isLogin) {
+      try {
+        const user = await signIn("credentials", {
+          redirect: false,
+          email: data.email,
+          password: data.password,
+        });
+        if (user?.error) {
+          toast({
+            title: "Error",
+            description: user.error,
+            duration: 3000,
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Success",
+            description: "Logged in successfully",
+            duration: 3000,
+            variant: "default",
+          });
+          route.push("/");
+        }
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: "Error",
+          description: "Something went wrong",
+          duration: 3000,
+          variant: "destructive",
+        });
+      }
+    } else {
+      dispatch(registerUser(data));
+      reset();
+      setIsLogin(!isLogin);
+    }
   };
 
   const toggleForm = () => {

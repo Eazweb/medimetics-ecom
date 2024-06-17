@@ -7,6 +7,7 @@ import Footer from "./components/Footer";
 import { Toaster } from "@/components/ui/toaster";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import ReduxProvider from "@/providers/ReduxProvider";
+import { Toaster as ToastMsg } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
           <NextAuthSessionProvider>
             <ReduxProvider>
               <Navbar />
+              <ToastMsg position="bottom-right" />
               {children}
               <Toaster />
               <Footer />
