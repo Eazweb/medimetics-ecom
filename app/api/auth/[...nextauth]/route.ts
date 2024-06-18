@@ -1,19 +1,28 @@
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions, User, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import { prismaDB } from "@/db/db.config";
 
-const isValidEmail = (email) => {
+interface ExtendedUser extends User {
+  id: string;
+  isAdmin: boolean;
+}
+
+interface ExtendedSession extends Session {
+  user: ExtendedUser;
+}
+
+const isValidEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
 
-const isValidPassword = (password) => {
+const isValidPassword = (password: string): boolean => {
   const minLength = 8;
   const hasUpperCase = /[A-Z]/.test(password);
   const hasLowerCase = /[a-z]/.test(password);
   const hasNumber = /[0-9]/.test(password);
-  const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+  const hasSpecialChar = /[@#$%^&*(),.?":{}|<>]/.test(password);
 
   return (
     password.length >= minLength &&
@@ -24,11 +33,14 @@ const isValidPassword = (password) => {
   );
 };
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
       name: "Credentials",
-      credentials: {},
+      credentials: {
+        email: { label: "Email", type: "text" },
+        password: { label: "Password", type: "password" },
+      },
       authorize: async (credentials) => {
         if (!credentials || !credentials.email || !credentials.password) {
           throw new Error("You must provide both an email and a password");
@@ -59,30 +71,32 @@ export const authOptions = {
         if (!isValid) {
           throw new Error("Password is incorrect");
         }
-        return user;
+        return {
+          id: user.id,
+          email: user.email,
+          isAdmin: user.isAdmin,
+        };
       },
     }),
   ],
   callbacks: {
     jwt: async ({ token, user }) => {
       if (user) {
-        token.user = user;
-        token.isAdmin = user.isAdmin;
+        token.user = user as ExtendedUser;
       }
       return token;
     },
 
     session: async ({ session, token }) => {
-      if (session.user) {
-        session.user.id = token.sub;
-        session.user.isAdmin = token.isAdmin;
+      if (token?.user) {
+        session.user = token.user as ExtendedUser;
       }
-      return session;
+      return session as ExtendedSession;
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    jwt: true,
+    strategy: "jwt",
     maxAge: 7 * 24 * 60 * 60,
   },
   pages: {

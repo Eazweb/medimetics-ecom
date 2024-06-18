@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface User {
   isAdmin: boolean;
@@ -15,6 +16,7 @@ const Navbar = () => {
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const toggleDropdown = () => setIsOpen(!isOpen);
   const { data: session } = useSession();
+  const { toast } = useToast();
 
   const Admin =
     session && session.user ? (session.user as User).isAdmin : false;
@@ -152,6 +154,16 @@ const Navbar = () => {
                   onClick={() => {
                     signOut({
                       callbackUrl: "/login",
+                    });
+                    toast({
+                      title: "Success",
+                      description: "Logged out successfully",
+                      duration: 3000,
+                      variant: "default",
+                      style: {
+                        backgroundColor: "#191919",
+                        color: "#fff",
+                      },
                     });
                   }}
                 >

@@ -53,6 +53,10 @@ const RegisterLoginUser = () => {
             description: "Logged in successfully",
             duration: 3000,
             variant: "default",
+            style: {
+              backgroundColor: "#191919",
+              color: "#fff",
+            },
           });
           route.push("/");
         }
