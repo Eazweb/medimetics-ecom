@@ -9,8 +9,6 @@ export async function middleware(req: NextRequest) {
     secureCookie: process.env.NODE_ENV === "production",
   });
 
-  console.log(session);
-
   const { pathname } = req.nextUrl;
 
   // If the user is authenticated and tries to access the login page, redirect to the home page
