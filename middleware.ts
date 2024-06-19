@@ -2,6 +2,10 @@ import { getToken } from "next-auth/jwt";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
+type User = {
+  isAdmin: boolean;
+};
+
 export async function middleware(req: NextRequest) {
   const session = await getToken({
     req,
@@ -27,9 +31,13 @@ export async function middleware(req: NextRequest) {
   }
 
   // Redirect to the home page if the user tries to access the dashboard without being an admin
-  // if (session && !session?.isAdmin && pathname === "/dashboard") {
-  //   return NextResponse.redirect(new URL("/", req.url));
-  // }
+  if (
+    pathname === "/dashboard" &&
+    session &&
+    !(session?.user as User).isAdmin
+  ) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
 
   // Allow the request to proceed if it's an API route or if it's the home page
   if (pathname.startsWith("/api/") || pathname === "/") {
