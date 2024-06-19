@@ -7,7 +7,7 @@ const ProductCard = ({ product }: any) => {
   return (
     <div className="w-full mx-auto my-8">
       <div className="relative overflow-hidden rounded-lg shadow-lg group">
-        <Link href={"/"} className="w-full h-84 overflow-hidden">
+        <Link href={"/products/1"} className="w-full h-84 overflow-hidden">
           <Image
             width={1000}
             height={1200}
