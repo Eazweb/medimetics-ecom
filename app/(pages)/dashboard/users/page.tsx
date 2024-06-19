@@ -1,5 +1,11 @@
+import Usertable from "@/app/_dashboardComponents/Usertable";
+
 const Dashboardusers = () => {
-  return <div></div>;
+  return (
+    <div>
+      <Usertable />
+    </div>
+  );
 };
 
 export default Dashboardusers;

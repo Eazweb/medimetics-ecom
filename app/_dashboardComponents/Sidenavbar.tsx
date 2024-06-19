@@ -6,6 +6,7 @@ import {
   User2Icon,
   MenuIcon,
   XIcon,
+  Package,
 } from "lucide-react";
 import { Link } from "next-view-transitions";
 import React, { FC, useState } from "react";
@@ -14,7 +15,7 @@ const Sidenavbar: FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<Boolean>(false);
 
   return (
-    <header className="bg-purple-50 shadow sticky top-0">
+    <header className="bg-purple-50 shadow sticky top-0 z-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           {/* Logo and Dashboard Link */}
@@ -54,8 +55,17 @@ const Sidenavbar: FC = () => {
                   href="/dashboard/products"
                   className="text-gray-900 hover:text-teal-600 flex justify-center items-end gap-1"
                 >
-                  <ShoppingCart className="h-6 w-6" />
+                  <Package className="h-6 w-6" />
                   <span className="ml-1">Products</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/dashboard/orders"
+                  className="text-gray-900 hover:text-teal-600 flex justify-center items-end gap-1"
+                >
+                  <ShoppingCart className="h-6 w-6" />
+                  <span className="ml-1">Orders</span>
                 </Link>
               </li>
             </ul>
@@ -99,6 +109,12 @@ const Sidenavbar: FC = () => {
               className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
             >
               Products
+            </Link>
+            <Link
+              href="/dashboard/orders"
+              className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50"
+            >
+              Orders
             </Link>
           </div>
         </div>
