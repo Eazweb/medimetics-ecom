@@ -4,7 +4,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -16,6 +15,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { PlusCircle } from "lucide-react";
+import { Link } from "next-view-transitions";
 
 const Productstable = () => {
   return (
@@ -27,6 +29,18 @@ const Productstable = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        <Link
+          href={"/dashboard/products/add"}
+          className="flex w-full items-center justify-end"
+        >
+          <Button size="sm" className="h-8 gap-1">
+            <PlusCircle className="h-3.5 w-3.5" />
+            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+              Add Product
+            </span>
+          </Button>
+        </Link>
+
         <Table>
           <TableHeader>
             <TableRow>
@@ -183,11 +197,6 @@ const Productstable = () => {
           </TableBody>
         </Table>
       </CardContent>
-      <CardFooter>
-        <div className="text-xs text-muted-foreground">
-          Showing <strong>1-10</strong> of <strong>32</strong> products
-        </div>
-      </CardFooter>
     </Card>
   );
 };
