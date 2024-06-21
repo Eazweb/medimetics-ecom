@@ -20,20 +20,36 @@ import { Button } from "@/components/ui/button";
 import ImageUpload from "../components/ImageUploader";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 type Size = {
   size: string[];
 };
+
 type Color = {
   color: { color: string; colorCode: string }[];
 };
+
+type FormData = {
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  selectedSizes: string[];
+  selectedColors: string[];
+};
+
 const CreateProduct = () => {
-  const [sizeSelection, setSizeSelection] = useState("no");
-  const [colorSelection, setColorSelection] = useState<string>("no");
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
+  const [selectedColors, setSelectedColors] = useState<string[]>([]);
+  const [showSizes, setShowSizes] = useState<boolean>(false);
+  const [showColors, setShowColors] = useState<boolean>(false);
+  const [category, setCategory] = useState<string>("");
 
   const sizes: Size = {
     size: ["S", "M", "L", "XL", "XXL"],
   };
+
   const colors: Color = {
     color: [
       { color: "Red", colorCode: "#FF0000" },
@@ -45,26 +61,41 @@ const CreateProduct = () => {
     ],
   };
 
-  const handleSizeChange = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    const target = e.target as HTMLInputElement;
-    setSizeSelection(target.value);
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm<FormData>();
+
+  const handleSizeSelection = (size: string) => {
+    setSelectedSizes((prev) =>
+      prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
+    );
   };
 
-  const handleColorChange = (
-    e: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
-    const target = e.target as HTMLInputElement;
-    setColorSelection(target.value);
+  const handleColorSelection = (color: string) => {
+    setSelectedColors((prev) =>
+      prev.includes(color) ? prev.filter((c) => c !== color) : [...prev, color]
+    );
   };
+
+  const onSubmit = (data: FormData) => {
+    console.log({ ...data, selectedSizes, selectedColors, category });
+  };
+
   return (
-    <div className="flex items-center justify-center p-5 flex-col bg-gray-200">
+    <form
+      onSubmit={handleSubmit(onSubmit)}
+      className="flex items-center justify-center p-5 flex-col bg-gray-200"
+    >
       <h1 className="text-2xl font-semibold text-start w-full my-5">
         Create Product
       </h1>
       <div className="w-full flex justify-end my-5">
-        <Button>Save Product</Button>
+        <CardContent>
+          <Button type="submit">Save Product</Button>
+        </CardContent>
       </div>
       <Card>
         <CardHeader>
@@ -82,7 +113,9 @@ const CreateProduct = () => {
                 type="text"
                 className="w-full"
                 placeholder="Enter product name"
+                {...register("name", { required: true })}
               />
+              {errors.name && <p className="text-red-500">Name is required.</p>}
             </div>
             <div className="grid gap-3">
               <Label htmlFor="description">Description</Label>
@@ -90,7 +123,11 @@ const CreateProduct = () => {
                 id="description"
                 className="min-h-32"
                 placeholder="Enter product description"
+                {...register("description", { required: true })}
               />
+              {errors.description && (
+                <p className="text-red-500">Description is required.</p>
+              )}
             </div>
           </div>
         </CardContent>
@@ -98,7 +135,10 @@ const CreateProduct = () => {
           <div className="grid gap-6 sm:grid-cols-3">
             <div className="grid gap-3">
               <Label htmlFor="category">Category</Label>
-              <Select>
+              <Select
+                {...register("category")}
+                onValueChange={(value) => setCategory(value)}
+              >
                 <SelectTrigger id="category" aria-label="Select category">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
@@ -108,13 +148,16 @@ const CreateProduct = () => {
                   <SelectItem value="children">Children</SelectItem>
                 </SelectContent>
               </Select>
+              {errors.category && (
+                <p className="text-red-500">Category is required.</p>
+              )}
             </div>
             <div className="grid gap-3">
               <Label htmlFor="size">Size</Label>
               <div className="flex items-center justify-start gap-2 w-full">
                 <RadioGroup
                   defaultValue="no"
-                  onClick={handleSizeChange}
+                  onValueChange={(value) => setShowSizes(value === "yes")}
                   className="flex items-center justify-start gap-2 w-full"
                 >
                   <RadioGroupItem value="no" id="size-no" />
@@ -124,15 +167,21 @@ const CreateProduct = () => {
                   <Label htmlFor="size-yes">Yes</Label>
                 </RadioGroup>
               </div>
-              {sizeSelection === "yes" && (
-                <span className="flex text-sm gap-2 text-gray-400">
+              {showSizes && (
+                <div>
                   {sizes.size.map((size) => (
-                    <p key={size}>
-                      {size}
-                      {","}
-                    </p>
+                    <div key={size}>
+                      <input
+                        type="checkbox"
+                        id={`size-${size}`}
+                        value={size}
+                        onChange={() => handleSizeSelection(size)}
+                        checked={selectedSizes.includes(size)}
+                      />
+                      <label htmlFor={`size-${size}`}>{size}</label>
+                    </div>
                   ))}
-                </span>
+                </div>
               )}
             </div>
           </div>
@@ -149,15 +198,18 @@ const CreateProduct = () => {
                 type="number"
                 className="w-full"
                 placeholder="Enter product price"
-                minLength={1}
+                {...register("price", { required: true })}
               />
+              {errors.price && (
+                <p className="text-red-500">Price is required.</p>
+              )}
             </div>
             <div className="grid gap-3">
               <Label htmlFor="color">Color</Label>
               <div className="flex items-center justify-start gap-2 w-full">
                 <RadioGroup
                   defaultValue="no"
-                  onClick={handleColorChange}
+                  onValueChange={(value) => setShowColors(value === "yes")}
                   className="flex items-center justify-start gap-2 w-full"
                 >
                   <RadioGroupItem value="no" id="color-no" />
@@ -167,12 +219,31 @@ const CreateProduct = () => {
                   <Label htmlFor="color-yes">Yes</Label>
                 </RadioGroup>
               </div>
-              {colorSelection === "yes" && (
-                <span className="flex text-sm gap-2 text-gray-400">
+              {showColors && (
+                <div>
                   {colors.color.map((color, idx) => (
-                    <p key={idx}>{color.color}</p>
+                    <div key={idx}>
+                      <input
+                        type="checkbox"
+                        id={`color-${color.color}`}
+                        value={color.color}
+                        onChange={() => handleColorSelection(color.color)}
+                        checked={selectedColors.includes(color.color)}
+                      />
+                      <label htmlFor={`color-${color.color}`}>
+                        {color.color}
+                      </label>
+                      <span
+                        style={{
+                          display: "inline-block",
+                          width: "20px",
+                          height: "20px",
+                          backgroundColor: color.colorCode,
+                        }}
+                      ></span>
+                    </div>
                   ))}
-                </span>
+                </div>
               )}
             </div>
           </div>
@@ -199,7 +270,7 @@ const CreateProduct = () => {
           <div className="grid gap-6 sm:grid-cols-3 text-black"></div>
         </CardContent>
       </Card>
-    </div>
+    </form>
   );
 };
 
