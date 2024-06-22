@@ -1,8 +1,24 @@
 "use client";
+import React, { FC } from "react";
 import { UploadButton } from "@/utils/uploadthing";
-import React from "react";
 
-const ImageUpload: React.FC = () => {
+interface ImageUploadProps {
+  url: (urls: string[]) => void;
+}
+
+const ImageUpload: FC<ImageUploadProps> = ({ url }) => {
+  // Function to handle successful uploads
+  const handleUploadSuccess = (res: any) => {
+    console.log("Files: ", res);
+    url([res]);
+    alert("Upload Completed");
+  };
+
+  // Function to handle upload errors
+  const handleUploadError = (error: Error) => {
+    alert(`ERROR ${error.message}`);
+  };
+
   return (
     <div className="flex flex-col items-center justify-center p-3">
       <div className="p-8 max-w-lg w-full bg-white rounded-lg shadow">
@@ -13,13 +29,8 @@ const ImageUpload: React.FC = () => {
           <p className="text-gray-600">Please select an image to upload.</p>
           <UploadButton
             endpoint="imageUploader"
-            onClientUploadComplete={(res) => {
-              console.log("Files: ", res);
-              alert("Upload Completed");
-            }}
-            onUploadError={(error: Error) => {
-              alert(`ERROR! ${error.message}`);
-            }}
+            onClientUploadComplete={handleUploadSuccess}
+            onUploadError={handleUploadError}
           />
         </div>
       </div>

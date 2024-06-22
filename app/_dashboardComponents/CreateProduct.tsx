@@ -21,6 +21,7 @@ import ImageUpload from "../components/ImageUploader";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useToast } from "@/components/ui/use-toast";
 
 type Size = {
   size: string[];
@@ -37,6 +38,8 @@ type FormData = {
   price: number;
   selectedSizes: string[];
   selectedColors: string[];
+  image: string;
+  images: string[];
 };
 
 const CreateProduct = () => {
@@ -45,6 +48,10 @@ const CreateProduct = () => {
   const [showSizes, setShowSizes] = useState<boolean>(false);
   const [showColors, setShowColors] = useState<boolean>(false);
   const [category, setCategory] = useState<string>("");
+  const [mainImageUrl, setMainImageUrl] = useState<string>("");
+  const [otherImageUrls, setOtherImageUrls] = useState<string[]>([]);
+
+  const { toast } = useToast();
 
   const sizes: Size = {
     size: ["S", "M", "L", "XL", "XXL"],
@@ -64,7 +71,7 @@ const CreateProduct = () => {
   const {
     register,
     handleSubmit,
-    watch,
+    reset,
     formState: { errors },
   } = useForm<FormData>();
 
@@ -81,7 +88,24 @@ const CreateProduct = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    console.log({ ...data, selectedSizes, selectedColors, category });
+    console.log({
+      ...data,
+      selectedSizes,
+      selectedColors,
+      category,
+      mainImageUrl,
+      otherImageUrls,
+    });
+    reset();
+    toast({
+      title: "Product Created",
+      description: "Product has been successfully created.",
+      duration: 3000,
+      style: {
+        backgroundColor: "#10B981",
+        color: "#fff",
+      },
+    });
   };
 
   return (
@@ -168,7 +192,7 @@ const CreateProduct = () => {
                 </RadioGroup>
               </div>
               {showSizes && (
-                <div>
+                <div className="flex gap-2 md:gap-3 items-center justify-center">
                   {sizes.size.map((size) => (
                     <div key={size}>
                       <input
@@ -220,7 +244,7 @@ const CreateProduct = () => {
                 </RadioGroup>
               </div>
               {showColors && (
-                <div>
+                <div className="flex items-center gap-2 justify-center flex-wrap">
                   {colors.color.map((color, idx) => (
                     <div key={idx}>
                       <input
@@ -230,14 +254,14 @@ const CreateProduct = () => {
                         onChange={() => handleColorSelection(color.color)}
                         checked={selectedColors.includes(color.color)}
                       />
-                      <label htmlFor={`color-${color.color}`}>
-                        {color.color}
-                      </label>
+
                       <span
                         style={{
                           display: "inline-block",
-                          width: "20px",
-                          height: "20px",
+                          width: "15px",
+                          height: "15px",
+                          borderRadius: "50%",
+                          border: "1px solid #000",
                           backgroundColor: color.colorCode,
                         }}
                       ></span>
@@ -254,7 +278,16 @@ const CreateProduct = () => {
               Main Image
               <span className="text-gray-500 text-sm"> (4MB max)</span>
             </Label>
-            <ImageUpload />
+            <ImageUpload
+              url={(res) => {
+                console.log("Main Image: ", res);
+                setMainImageUrl(res[0]);
+                alert("Main Image Upload Completed");
+              }}
+            />
+            {errors.image && (
+              <p className="text-red-500">Main Image is required.</p>
+            )}
           </div>
         </CardContent>
         <CardContent>
@@ -263,7 +296,16 @@ const CreateProduct = () => {
               Other Images
               <span className="text-gray-500 text-sm"> (4MB max)</span>
             </Label>
-            <ImageUpload />
+            <ImageUpload
+              url={(res) => {
+                console.log("Other Images: ", res);
+                setOtherImageUrls(res);
+                alert("Other Image Upload Completed");
+              }}
+            />
+            {errors.images && (
+              <p className="text-red-500">Other Images are required.</p>
+            )}
           </div>
         </CardContent>
         <CardContent>
