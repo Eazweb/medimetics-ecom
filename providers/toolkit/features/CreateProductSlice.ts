@@ -5,8 +5,8 @@ export interface ProductState {
   name: string;
   price: number;
   description: string;
-  mainImage: string;
-  otherImages: string;
+  mainImage: { url: string }[];
+  otherImages: { url: string }[];
   userId: string;
   categories: string;
   sizes?: string[];
@@ -16,8 +16,8 @@ const initialState: ProductState = {
   name: "",
   price: 0,
   description: "",
-  mainImage: "",
-  otherImages: "",
+  mainImage: [],
+  otherImages: [],
   userId: "",
   categories: "",
   sizes: [],
@@ -52,7 +52,7 @@ export const CreatePro = createAsyncThunk(
         throw new Error("Product creation failed");
       }
       const product = await response.json();
-      if (product.status === 200) {
+      if (product.message === "Product created successfully") {
         toast.success("Product created successfully");
         return product;
       } else {
