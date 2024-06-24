@@ -4,23 +4,8 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (req: NextRequest) => {
   try {
     const body = await req.json();
-    const requiredFields = [
-      "name",
-      "price",
-      "description",
-      "mainImage",
-      "quantity",
-      "otherImages",
-      "userId",
-      "categories",
-    ];
-    let missingFields: any = [];
 
-    requiredFields.forEach((field) => {
-      if (body[field] === undefined) {
-        missingFields.push(field);
-      }
-    });
+    let missingFields: any = [];
 
     if (missingFields.length > 0) {
       return NextResponse.json(
@@ -49,7 +34,7 @@ export const POST = async (req: NextRequest) => {
   } catch (error) {
     console.error(error);
     return NextResponse.json(
-      { message: "Internal server error" },
+      { message: "Internal server error", error: error },
       { status: 500 }
     );
   }

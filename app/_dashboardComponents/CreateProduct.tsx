@@ -21,7 +21,9 @@ import ImageUpload from "../components/ImageUploader";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useToast } from "@/components/ui/use-toast";
+import { useAppDispatch } from "@/providers/toolkit/hooks/hooks";
+import { CreatePro } from "@/providers/toolkit/features/CreateProductSlice";
+import { useSession } from "next-auth/react";
 
 type Size = {
   size: string[];
@@ -39,7 +41,7 @@ type FormData = {
   selectedSizes: string[];
   selectedColors: string[];
   image: string;
-  images: string[];
+  images: string;
 };
 
 const CreateProduct = () => {
@@ -49,9 +51,10 @@ const CreateProduct = () => {
   const [showColors, setShowColors] = useState<boolean>(false);
   const [category, setCategory] = useState<string>("");
   const [mainImageUrl, setMainImageUrl] = useState<string>("");
-  const [otherImageUrls, setOtherImageUrls] = useState<string[]>([]);
+  const [otherImageUrls, setOtherImageUrls] = useState<string>("");
 
-  const { toast } = useToast();
+  const dispatch = useAppDispatch();
+  const { data: session } = useSession();
 
   const sizes: Size = {
     size: ["S", "M", "L", "XL", "XXL"],
@@ -88,24 +91,20 @@ const CreateProduct = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    console.log({
-      ...data,
-      selectedSizes,
-      selectedColors,
-      category,
-      mainImageUrl,
-      otherImageUrls,
-    });
-    reset();
-    toast({
-      title: "Product Created",
-      description: "Product has been successfully created.",
-      duration: 3000,
-      style: {
-        backgroundColor: "#10B981",
-        color: "#fff",
-      },
-    });
+    dispatch(
+      CreatePro({
+        name: data.name,
+        price: parseInt(data.price.toString()),
+        description: data.description,
+        mainImage: mainImageUrl,
+        otherImages: otherImageUrls,
+        userId: session?.user?.id,
+        categories: category,
+        sizes: selectedSizes,
+        colors: selectedColors,
+      })
+    );
+    // reset();
   };
 
   return (
@@ -280,8 +279,7 @@ const CreateProduct = () => {
             </Label>
             <ImageUpload
               url={(res) => {
-                console.log("Main Image: ", res);
-                setMainImageUrl(res[0]);
+                setMainImageUrl(res[0]?.[0]?.url);
                 alert("Main Image Upload Completed");
               }}
             />
@@ -298,8 +296,7 @@ const CreateProduct = () => {
             </Label>
             <ImageUpload
               url={(res) => {
-                console.log("Other Images: ", res);
-                setOtherImageUrls(res);
+                setOtherImageUrls(res[0]?.[0]?.url);
                 alert("Other Image Upload Completed");
               }}
             />

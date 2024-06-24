@@ -27,7 +27,7 @@ model Product {
   price       Float
   mainImage   String
   quantity    Int
-  otherImages String[]
+  otherImages String
   sizes       String[]
   colors      String[]
   categories  Category[]
