@@ -20,20 +20,20 @@ import { Button } from "@/components/ui/button";
 import ImageUpload from "../components/ImageUploader";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch } from "@/providers/toolkit/hooks/hooks";
 import { CreatePro } from "@/providers/toolkit/features/CreateProductSlice";
 import { useSession } from "next-auth/react";
 
-type Size = {
+interface Size {
   size: string[];
-};
+}
 
-type Color = {
+interface Color {
   color: { color: string; colorCode: string }[];
-};
+}
 
-type FormData = {
+interface FormData {
   name: string;
   description: string;
   category: string;
@@ -42,7 +42,13 @@ type FormData = {
   selectedColors: string[];
   image: string;
   images: string;
-};
+}
+
+interface Session {
+  user?: {
+    id: string;
+  };
+}
 
 const CreateProduct = () => {
   const [selectedSizes, setSelectedSizes] = useState<string[]>([]);
@@ -54,7 +60,7 @@ const CreateProduct = () => {
   const [otherImageUrls, setOtherImageUrls] = useState<string>("");
 
   const dispatch = useAppDispatch();
-  const { data: session } = useSession();
+  const { data: session } = useSession() as { data: Session };
 
   const sizes: Size = {
     size: ["S", "M", "L", "XL", "XXL"],
@@ -90,7 +96,7 @@ const CreateProduct = () => {
     );
   };
 
-  const onSubmit = (data: FormData) => {
+  const onSubmit: SubmitHandler<FormData> = (data) => {
     dispatch(
       CreatePro({
         name: data.name,
@@ -191,17 +197,20 @@ const CreateProduct = () => {
                 </RadioGroup>
               </div>
               {showSizes && (
-                <div className="flex gap-2 md:gap-3 items-center justify-center">
+                <div className="flex gap-2 md:gap-3 items-center justify-center flex-wrap">
                   {sizes.size.map((size) => (
-                    <div key={size}>
+                    <div key={size} className="flex items-center gap-2">
                       <input
                         type="checkbox"
                         id={`size-${size}`}
                         value={size}
                         onChange={() => handleSizeSelection(size)}
                         checked={selectedSizes.includes(size)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                       />
-                      <label htmlFor={`size-${size}`}>{size}</label>
+                      <label htmlFor={`size-${size}`} className="text-sm">
+                        {size}
+                      </label>
                     </div>
                   ))}
                 </div>
@@ -245,15 +254,15 @@ const CreateProduct = () => {
               {showColors && (
                 <div className="flex items-center gap-2 justify-center flex-wrap">
                   {colors.color.map((color, idx) => (
-                    <div key={idx}>
+                    <div key={idx} className="flex items-center gap-2">
                       <input
                         type="checkbox"
                         id={`color-${color.color}`}
                         value={color.color}
                         onChange={() => handleColorSelection(color.color)}
                         checked={selectedColors.includes(color.color)}
+                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                       />
-
                       <span
                         style={{
                           display: "inline-block",
@@ -279,8 +288,7 @@ const CreateProduct = () => {
             </Label>
             <ImageUpload
               url={(res) => {
-                setMainImageUrl(res[0]?.[0]?.url);
-                alert("Main Image Upload Completed");
+                setMainImageUrl(res[0]);
               }}
             />
             {errors.image && (
@@ -296,17 +304,13 @@ const CreateProduct = () => {
             </Label>
             <ImageUpload
               url={(res) => {
-                setOtherImageUrls(res[0]?.[0]?.url);
-                alert("Other Image Upload Completed");
+                setOtherImageUrls(res[0]);
               }}
             />
             {errors.images && (
               <p className="text-red-500">Other Images are required.</p>
             )}
           </div>
-        </CardContent>
-        <CardContent>
-          <div className="grid gap-6 sm:grid-cols-3 text-black"></div>
         </CardContent>
       </Card>
     </form>
