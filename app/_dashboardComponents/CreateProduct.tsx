@@ -56,8 +56,8 @@ const CreateProduct = () => {
   const [showSizes, setShowSizes] = useState<boolean>(false);
   const [showColors, setShowColors] = useState<boolean>(false);
   const [category, setCategory] = useState<string>("");
-  const [mainImageUrl, setMainImageUrl] = useState<{ url: string }[]>([]);
-  const [otherImageUrls, setOtherImageUrls] = useState<{ url: string }[]>([]);
+  const [mainImageUrl, setMainImageUrl] = useState<string>("");
+  const [otherImageUrls, setOtherImageUrls] = useState<string>("");
 
   const dispatch = useAppDispatch();
   const { data: session } = useSession() as { data: Session };
@@ -288,7 +288,7 @@ const CreateProduct = () => {
             </Label>
             <ImageUpload
               url={(res) => {
-                setMainImageUrl([{ url: res[0] }]);
+                setMainImageUrl(res[0]);
               }}
             />
             {errors.image && (
@@ -304,7 +304,7 @@ const CreateProduct = () => {
             </Label>
             <ImageUpload
               url={(res) => {
-                setOtherImageUrls([{ url: res[0] }]);
+                setOtherImageUrls(res[0]);
               }}
             />
             {errors.images && (

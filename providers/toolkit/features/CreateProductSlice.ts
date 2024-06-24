@@ -5,8 +5,8 @@ export interface ProductState {
   name: string;
   price: number;
   description: string;
-  mainImage: { url: string }[];
-  otherImages: { url: string }[];
+  mainImage: string;
+  otherImages: string;
   userId: string;
   categories: string;
   sizes?: string[];
@@ -16,8 +16,8 @@ const initialState: ProductState = {
   name: "",
   price: 0,
   description: "",
-  mainImage: [],
-  otherImages: [],
+  mainImage: "",
+  otherImages: "",
   userId: "",
   categories: "",
   sizes: [],
@@ -37,8 +37,8 @@ export const CreatePro = createAsyncThunk(
           name: productData?.name,
           price: productData?.price,
           description: productData?.description,
-          mainImage: productData?.mainImage?.[0].url,
-          otherImages: productData?.otherImages?.[0].url,
+          mainImage: productData?.mainImage,
+          otherImages: productData?.otherImages,
           userId: productData?.userId,
           categories: {
             name: productData.categories,
