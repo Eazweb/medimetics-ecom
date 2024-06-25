@@ -38,7 +38,14 @@ export async function middleware(req: NextRequest) {
   ) {
     return NextResponse.redirect(new URL("/", req.url));
   }
-
+  // Redirect to the home page if the user tries to access any dashboard route without being an admin
+  if (
+    pathname.startsWith("/dashboard") &&
+    session &&
+    !(session?.user as User).isAdmin
+  ) {
+    return NextResponse.redirect(new URL("/", req.url));
+  }
   // Allow the request to proceed if it's an API route or if it's the home page
   if (pathname.startsWith("/api/") || pathname === "/") {
     return NextResponse.next();
@@ -49,5 +56,13 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/", "/login", "/order", "/cart", "/dashboard", "/api/:path*"],
+  matcher: [
+    "/",
+    "/login",
+    "/order",
+    "/cart",
+    "/dashboard",
+    "/api/:path*",
+    "/dashboard/:path*",
+  ],
 };
