@@ -9,6 +9,7 @@ type Product = {
   categories: Array<any>;
   sizes: Array<any>;
   colors: Array<any>;
+  otherImages: string;
 };
 export const productsApi = createApi({
   reducerPath: "productsApi",
@@ -20,7 +21,10 @@ export const productsApi = createApi({
     getAllProducts: builder.query<Array<Product>, void>({
       query: () => "get-all-products",
     }),
+    getProductById: builder.query<Product, string>({
+      query: (id) => `get-all-products/${id}`,
+    }),
   }),
 });
 
-export const { useGetAllProductsQuery } = productsApi;
+export const { useGetAllProductsQuery, useGetProductByIdQuery } = productsApi;
