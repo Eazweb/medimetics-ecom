@@ -4,10 +4,10 @@ type User = {
   id: number;
   name: string;
   email: string;
-  password: string;
-  role: string;
+  isAdmin: boolean;
   createdAt: string;
   updatedAt: string;
+  Orders: any;
 };
 
 export const userAPI = createApi({

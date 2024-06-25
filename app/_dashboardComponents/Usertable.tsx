@@ -1,4 +1,4 @@
-import React from "react";
+"use client";
 import { Badge } from "@/components/ui/badge";
 import {
   Table,
@@ -15,8 +15,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { useGetAllUsersQuery } from "@/providers/toolkit/features/GetAllUserSlice";
+import TableSkeletons from "../temp/TableSkeletons";
+import { format } from "date-fns";
 
 const Usertable = () => {
+  const { data, error, isLoading } = useGetAllUsersQuery();
+
+  if (isLoading)
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <TableSkeletons />
+      </div>
+    );
+  if (error) return <div>An error occurred: {error.toString()}</div>;
   return (
     <Card>
       <CardHeader className="px-7">
@@ -30,20 +42,38 @@ const Usertable = () => {
               <TableHead>Name</TableHead>
               <TableHead>Email</TableHead>
               <TableHead>Role</TableHead>
-              <TableHead>Date Joined</TableHead>
+              <TableHead>Joined</TableHead>
+              <TableHead>Updated</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow>
-              <TableCell className="font-medium">John Doe</TableCell>
-              <TableCell>john@example.com</TableCell>
-              <TableCell>
-                <Badge className="text-xs" variant="secondary">
-                  User
-                </Badge>
-              </TableCell>
-              <TableCell>2023-01-01</TableCell>
-            </TableRow>
+            {data && data.length > 0 ? (
+              data?.map((user) => (
+                <TableRow key={user.id}>
+                  <TableCell className="text-xs font-medium">
+                    {user.name}
+                  </TableCell>
+                  <TableCell>{user.email}</TableCell>
+                  <TableCell>
+                    <Badge className="text-xs" variant="secondary">
+                      {user.isAdmin ? "Admin" : "User"}
+                    </Badge>
+                  </TableCell>
+                  <TableCell>
+                    {format(new Date(user.createdAt), "PPP")}
+                  </TableCell>
+                  <TableCell>
+                    {format(new Date(user.updatedAt), "PPP")}
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center">
+                  No users found.
+                </TableCell>
+              </TableRow>
+            )}
           </TableBody>
         </Table>
       </CardContent>

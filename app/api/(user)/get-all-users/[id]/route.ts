@@ -7,17 +7,19 @@ export const GET = async (_: any, { params }: { params: { id: string } }) => {
       where: {
         id: params?.id,
       },
-      include: {
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        isAdmin: true,
+        createdAt: true,
+        updatedAt: true,
         Order: true,
       },
     });
     if (!user)
       return NextResponse.json({ message: "No User Found", status: 404 });
-    return NextResponse.json({
-      message: "User Found",
-      status: 200,
-      data: user,
-    });
+    return NextResponse.json(user, { status: 200 });
   } catch (error) {
     return NextResponse.json({ message: "Internal Server Error", status: 500 });
   }
