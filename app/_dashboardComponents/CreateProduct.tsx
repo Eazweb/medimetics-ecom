@@ -110,7 +110,7 @@ const CreateProduct = () => {
         colors: selectedColors,
       })
     );
-    // reset();
+    reset();
   };
 
   return (
