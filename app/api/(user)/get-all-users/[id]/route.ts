@@ -1,26 +1,40 @@
 import { prismaDB } from "@/db/db.config";
+import client from "@/lib/Redis";
 import { NextResponse } from "next/server";
 
 export const GET = async (_: any, { params }: { params: { id: string } }) => {
   try {
-    const user = await prismaDB.user.findUnique({
-      where: {
-        id: params?.id,
-      },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        isAdmin: true,
-        createdAt: true,
-        updatedAt: true,
-        Order: true,
-      },
-    });
-    if (!user)
-      return NextResponse.json({ message: "No User Found", status: 404 });
+    const cachedUser = await client.get(`user:${params.id}`);
+    let user;
+
+    if (cachedUser) {
+      user = JSON.parse(cachedUser);
+    } else {
+      user = await prismaDB.user.findUnique({
+        where: {
+          id: params?.id,
+        },
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          isAdmin: true,
+          createdAt: true,
+          updatedAt: true,
+          Order: true,
+        },
+      });
+
+      if (user) {
+        await client.setex(`user:${params.id}`, 30, JSON.stringify(user));
+      } else {
+        return NextResponse.json({ message: "No User Found", status: 404 });
+      }
+    }
+
     return NextResponse.json(user, { status: 200 });
   } catch (error) {
+    console.error("Failed to fetch user:", error);
     return NextResponse.json({ message: "Internal Server Error", status: 500 });
   }
 };
