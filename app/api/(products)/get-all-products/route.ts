@@ -1,13 +1,33 @@
 import { prismaDB } from "@/db/db.config";
+import client from "@/lib/Redis";
 import { NextResponse } from "next/server";
 
-export const GET = async (_: any) => {
+async function getProductsFromCache() {
+  const cache = await client.get("products");
+  return cache ? JSON.parse(cache) : null;
+}
+
+async function fetchProductsAndUpdateCache() {
+  const products = await prismaDB.product.findMany({
+    include: {
+      categories: true,
+    },
+  });
+
+  if (products.length > 0) {
+    await client.set("products", JSON.stringify(products), "EX", 60);
+  }
+
+  return products;
+}
+
+export const GET = async () => {
   try {
-    const products = await prismaDB.product.findMany({
-      include: {
-        categories: true,
-      },
-    });
+    let products = await getProductsFromCache();
+
+    if (!products) {
+      products = await fetchProductsAndUpdateCache();
+    }
 
     if (products.length === 0) {
       return NextResponse.json(
