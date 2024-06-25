@@ -104,7 +104,7 @@ const CreateProduct = () => {
         description: data.description,
         mainImage: mainImageUrl,
         otherImages: otherImageUrls,
-        userId: session?.user?.id,
+        userId: session?.user?.id as string,
         categories: category,
         sizes: selectedSizes,
         colors: selectedColors,
