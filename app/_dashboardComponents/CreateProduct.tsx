@@ -24,6 +24,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { useAppDispatch } from "@/providers/toolkit/hooks/hooks";
 import { CreatePro } from "@/providers/toolkit/features/CreateProductSlice";
 import { useSession } from "next-auth/react";
+import { Save } from "lucide-react";
 
 interface Size {
   size: string[];
@@ -116,14 +117,19 @@ const CreateProduct = () => {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="flex items-center justify-center p-5 flex-col bg-gray-200"
+      className="flex items-center justify-center p-5 flex-col bg-gray-200 relative"
     >
       <h1 className="text-2xl font-semibold text-start w-full my-5">
         Create Product
       </h1>
-      <div className="w-full flex justify-end my-5">
+      <div className="w-full flex justify-end my-5 sticky top-40">
         <CardContent>
-          <Button type="submit">Save Product</Button>
+          <Button type="submit" size="sm" className="h-8 gap-1 ">
+            <Save className="h-3.5 w-3.5" />
+            <span className="sr-only sm:not-sr-only sm:whitespace-nowrap">
+              Save Product
+            </span>
+          </Button>
         </CardContent>
       </div>
       <Card>

@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -18,8 +19,20 @@ import {
 import { Button } from "@/components/ui/button";
 import { PlusCircle } from "lucide-react";
 import { Link } from "next-view-transitions";
+import { useGetAllProductsQuery } from "@/providers/toolkit/features/GetAllProductsSlice";
+import { Suspense } from "react";
+import TableSkeletons from "../temp/TableSkeletons";
 
 const Productstable = () => {
+  const { data, error, isLoading } = useGetAllProductsQuery();
+
+  if (isLoading)
+    return (
+      <div className="w-full h-full flex items-center justify-center">
+        <TableSkeletons />
+      </div>
+    );
+  if (error) return <div>An error occurred: </div>;
   return (
     <Card>
       <CardHeader>
@@ -41,161 +54,75 @@ const Productstable = () => {
           </Button>
         </Link>
 
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="hidden w-[100px] sm:table-cell">
-                <span className="sr-only">Image</span>
-              </TableHead>
-              <TableHead>Name</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead className="hidden md:table-cell">Price</TableHead>
-              <TableHead className="hidden md:table-cell">
-                Total Sales
-              </TableHead>
-              <TableHead className="hidden md:table-cell">Created at</TableHead>
-              <TableHead>
-                <span className="sr-only">Actions</span>
-              </TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell className="hidden sm:table-cell">
-                <Image
-                  alt="Product image"
-                  className="aspect-square rounded-md object-cover"
-                  height="64"
-                  src="/placeholder.svg"
-                  width="64"
-                />
-              </TableCell>
-              <TableCell className="font-medium">
-                Laser Lemonade Machine
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline">Draft</Badge>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">$499.99</TableCell>
-              <TableCell className="hidden md:table-cell">25</TableCell>
-              <TableCell className="hidden md:table-cell">
-                2023-07-12 10:42 AM
-              </TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="hidden sm:table-cell">
-                <Image
-                  alt="Product image"
-                  className="aspect-square rounded-md object-cover"
-                  height="64"
-                  src="/placeholder.svg"
-                  width="64"
-                />
-              </TableCell>
-              <TableCell className="font-medium">
-                Hypernova Headphones
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline">Active</Badge>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">$129.99</TableCell>
-              <TableCell className="hidden md:table-cell">100</TableCell>
-              <TableCell className="hidden md:table-cell">
-                2023-10-18 03:21 PM
-              </TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="hidden sm:table-cell">
-                <Image
-                  alt="Product image"
-                  className="aspect-square rounded-md object-cover"
-                  height="64"
-                  src="/placeholder.svg"
-                  width="64"
-                />
-              </TableCell>
-              <TableCell className="font-medium">AeroGlow Desk Lamp</TableCell>
-              <TableCell>
-                <Badge variant="outline">Active</Badge>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">$39.99</TableCell>
-              <TableCell className="hidden md:table-cell">50</TableCell>
-              <TableCell className="hidden md:table-cell">
-                2023-11-29 08:15 AM
-              </TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="hidden sm:table-cell">
-                <Image
-                  alt="Product image"
-                  className="aspect-square rounded-md object-cover"
-                  height="64"
-                  src="/placeholder.svg"
-                  width="64"
-                />
-              </TableCell>
-              <TableCell className="font-medium">
-                TechTonic Energy Drink
-              </TableCell>
-              <TableCell>
-                <Badge variant="secondary">Draft</Badge>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">$2.99</TableCell>
-              <TableCell className="hidden md:table-cell">0</TableCell>
-              <TableCell className="hidden md:table-cell">
-                2023-12-25 11:59 PM
-              </TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="hidden sm:table-cell">
-                <Image
-                  alt="Product image"
-                  className="aspect-square rounded-md object-cover"
-                  height="64"
-                  src="/placeholder.svg"
-                  width="64"
-                />
-              </TableCell>
-              <TableCell className="font-medium">
-                Gamer Gear Pro Controller
-              </TableCell>
-              <TableCell>
-                <Badge variant="outline">Active</Badge>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">$59.99</TableCell>
-              <TableCell className="hidden md:table-cell">75</TableCell>
-              <TableCell className="hidden md:table-cell">
-                2024-01-01 12:00 AM
-              </TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell className="hidden sm:table-cell">
-                <Image
-                  alt="Product image"
-                  className="aspect-square rounded-md object-cover"
-                  height="64"
-                  src="/placeholder.svg"
-                  width="64"
-                />
-              </TableCell>
-              <TableCell className="font-medium">Luminous VR Headset</TableCell>
-              <TableCell>
-                <Badge variant="outline">Active</Badge>
-              </TableCell>
-              <TableCell className="hidden md:table-cell">$199.99</TableCell>
-              <TableCell className="hidden md:table-cell">30</TableCell>
-              <TableCell className="hidden md:table-cell">
-                2024-02-14 02:14 PM
-              </TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <Suspense fallback={<TableSkeletons />}>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className=" w-[70px] md:w-[100px] table-cell">
+                  <span className="sr-only">Image</span>
+                </TableHead>
+                <TableHead>Name</TableHead>
+                <TableHead>Categories</TableHead>
+                <TableHead className="table-cell">Price</TableHead>
+                <TableHead className="hidden md:table-cell">Size</TableHead>
+                <TableHead className="hidden md:table-cell">Colors</TableHead>
+                <TableHead>
+                  <span className="sr-only">Actions</span>
+                </TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {data &&
+                data?.map((product: any) => (
+                  <TableRow key={product?.id}>
+                    <TableCell className="table-cell">
+                      <Image
+                        alt={product?.name || "Product image"}
+                        className="aspect-square rounded-md object-cover"
+                        height={64}
+                        src={product?.mainImage}
+                        width={64}
+                      />
+                    </TableCell>
+                    <TableCell className="text-xs md:text-sm md:font-medium">
+                      {product?.name}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">
+                        {product?.categories.map((category: any) => (
+                          <span key={category.id}>{category.name}</span>
+                        ))}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="table-cell text-xs md:text-sm md:font-medium">
+                      <span className="font-medium">₹</span>
+                      {product?.price}
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {product.sizes && product.sizes.length > 0
+                        ? product?.sizes.map((size: any, i: number) => (
+                            <span key={i}>
+                              {size}
+                              {i !== product.sizes.length - 1 && ", "}
+                            </span>
+                          ))
+                        : "No sizes available"}
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      {product.colors && product.colors.length > 0
+                        ? product.colors.map((color: any, index: number) => (
+                            <span key={index}>
+                              {color}
+                              {index !== product.colors.length - 1 ? ", " : ""}
+                            </span>
+                          ))
+                        : "No colors available"}
+                    </TableCell>
+                  </TableRow>
+                ))}
+            </TableBody>
+          </Table>
+        </Suspense>
       </CardContent>
     </Card>
   );

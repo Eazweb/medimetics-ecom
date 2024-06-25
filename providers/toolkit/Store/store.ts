@@ -1,13 +1,17 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { UserRegisterSlice } from "../features/RegisterUserSlice";
 import { CreateProductSlice } from "../features/CreateProductSlice";
+import { productsApi } from "../features/GetAllProductsSlice";
 
 export const makeStore = () => {
   return configureStore({
     reducer: {
+      [productsApi.reducerPath]: productsApi.reducer,
       user: UserRegisterSlice.reducer,
       product: CreateProductSlice.reducer,
     },
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware().concat(productsApi.middleware),
   });
 };
 
