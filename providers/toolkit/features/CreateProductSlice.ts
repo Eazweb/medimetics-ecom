@@ -5,8 +5,8 @@ export interface ProductState {
   name: string;
   price: number;
   description: string;
-  mainImage: string;
-  otherImages: string;
+  mainImage: string[];
+  otherImages: string[];
   userId: string;
   categories: string;
   sizes?: string[];
@@ -16,8 +16,8 @@ const initialState: ProductState = {
   name: "",
   price: 0,
   description: "",
-  mainImage: "",
-  otherImages: "",
+  mainImage: [],
+  otherImages: [],
   userId: "",
   categories: "",
   sizes: [],
