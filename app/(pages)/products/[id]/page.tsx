@@ -91,18 +91,19 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           <label htmlFor="quantity" className="block font-semibold mb-2">
             Quantity
           </label>
-          <input
+          <select
             id="quantity"
-            type="number"
-            className="w-20 border border-gray-300 rounded p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            min="1"
             value={quantity}
-            onChange={(e) => setQuantity(Math.max(1, Number(e.target.value)))}
+            onChange={(e) => setQuantity(Number(e.target.value))}
+            className="w-20 border border-gray-300 rounded p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
             aria-describedby="quantityHelp"
-          />
-          <p id="quantityHelp" className="mt-1 text-sm text-gray-500">
-            Use the arrows or type to adjust the quantity.
-          </p>
+          >
+            {[1, 2, 3, 4, 5].map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </select>
         </div>
         <Button className="text-white px-6 py-2 rounded">Add to Cart</Button>
       </div>

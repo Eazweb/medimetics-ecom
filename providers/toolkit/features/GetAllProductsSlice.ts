@@ -23,9 +23,11 @@ export const productsApi = createApi({
   endpoints: (builder) => ({
     getAllProducts: builder.query<Array<Product>, void>({
       query: () => "get-all-products",
+      keepUnusedDataFor: 0,
     }),
     getProductById: builder.query<Product, string>({
       query: (id) => `get-all-products/${id}`,
+      keepUnusedDataFor: 0,
     }),
   }),
 });
