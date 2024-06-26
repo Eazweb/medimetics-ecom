@@ -10,12 +10,14 @@ type User = {
   Orders: any;
 };
 
+const baseUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://shop-smart-psi.vercel.app/api"
+    : "http://localhost:3000/api/";
+
 export const userAPI = createApi({
   reducerPath: "userAPI",
-  baseQuery: fetchBaseQuery({
-    baseUrl:
-      "https://shop-smart-psi.vercel.app/api" || "http://localhost:3000/api/",
-  }),
+  baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
     getAllUsers: builder.query<Array<User>, void>({
       query: () => "get-all-users",

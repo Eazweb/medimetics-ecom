@@ -11,12 +11,15 @@ type Product = {
   colors: Array<any>;
   otherImages: string;
 };
+
+const baseUrl =
+  process.env.NODE_ENV === "production"
+    ? "https://shop-smart-psi.vercel.app/api"
+    : "http://localhost:3000/api/";
+
 export const productsApi = createApi({
   reducerPath: "productsApi",
-  baseQuery: fetchBaseQuery({
-    baseUrl:
-      "https://shop-smart-psi.vercel.app/api" || "http://localhost:3000/api/",
-  }),
+  baseQuery: fetchBaseQuery({ baseUrl }),
   endpoints: (builder) => ({
     getAllProducts: builder.query<Array<Product>, void>({
       query: () => "get-all-products",
