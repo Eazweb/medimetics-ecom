@@ -1,28 +1,37 @@
 "use client";
 import { useState } from "react";
 import ProductCard from "@/app/components/ProductCard";
-import { products } from "@/app/temp/shop";
+
 import { Grid, List } from "lucide-react";
+import { useGetAllProductsQuery } from "@/providers/toolkit/features/GetAllProductsSlice";
+import ProductsSkeletons from "@/app/temp/ProductsSkeletons";
 
 const AllProducts = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortOption, setSortOption] = useState<string>("1");
+  const { data, error, isLoading } = useGetAllProductsQuery();
 
-  const sortedProducts = [...products].sort((a, b) => {
-    switch (sortOption) {
-      case "2":
-        return a.price - b.price;
-      case "3":
-        return b.price - a.price;
-      case "4":
-        return a.name.localeCompare(b.name);
-      case "5":
-        return b.name.localeCompare(a.name);
-      default:
-        return 0;
-    }
-  });
+  // Ensure data is available before sorting
+  const sortedProducts = data
+    ? [...data].sort((a, b) => {
+        switch (sortOption) {
+          case "2":
+            return a.price - b.price;
+          case "3":
+            return b.price - a.price;
+          case "4":
+            return a.name.localeCompare(b.name);
+          case "5":
+            return b.name.localeCompare(a.name);
+          default:
+            return 0;
+        }
+      })
+    : [];
 
+  if (isLoading) {
+    return <ProductsSkeletons />;
+  }
   return (
     <div className="w-full flex flex-col">
       <div className="flex w-full items-center justify-between p-4 bg-gray-100 rounded-lg shadow z-50 sticky top-0">
@@ -68,9 +77,13 @@ const AllProducts = () => {
             : "grid grid-cols-2 gap-4"
         }`}
       >
-        {sortedProducts?.map((product, index) => (
-          <ProductCard key={index} product={product} />
-        ))}
+        {error ? (
+          <div>Error loading products.</div>
+        ) : (
+          sortedProducts.map((product, index) => (
+            <ProductCard key={index} product={product} />
+          ))
+        )}
       </div>
     </div>
   );
