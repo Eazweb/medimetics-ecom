@@ -1,5 +1,5 @@
 import { prismaDB } from "@/db/db.config";
-import client from "@/lib/Redis";
+import { client } from "@/lib/Redis";
 import { NextResponse } from "next/server";
 
 async function getProductsFromCache() {

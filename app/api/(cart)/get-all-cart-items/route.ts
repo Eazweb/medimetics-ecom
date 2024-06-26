@@ -1,5 +1,5 @@
 import { prismaDB } from "@/db/db.config";
-import client from "@/lib/Redis";
+import { client } from "@/lib/Redis";
 import { NextRequest, NextResponse } from "next/server";
 export const POST = async (req: NextRequest) => {
   const { userId } = await req.json();
