@@ -15,7 +15,7 @@ async function fetchProductsAndUpdateCache() {
   });
 
   if (products.length > 0) {
-    await client.set("products", JSON.stringify(products), "EX", 60);
+    await client.set("products", JSON.stringify(products), "EX", 120);
   }
 
   return products;
