@@ -12,7 +12,7 @@ type User = {
 
 const baseUrl =
   process.env.NODE_ENV === "production"
-    ? "https://shop-smart-psi.vercel.app/api"
+    ? "https://shop-smart-lilac.vercel.app/api"
     : "http://localhost:3000/api/";
 
 export const userAPI = createApi({
