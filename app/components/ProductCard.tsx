@@ -1,24 +1,33 @@
 import Image from "next/image";
-import React from "react";
 import ToastCartButton from "./ToastCartButton";
 import { Link } from "next-view-transitions";
 
-const ProductCard = ({ product }: any) => {
+type Product = {
+  id: number;
+  name: string;
+  price: number;
+  mainImage: string;
+  otherImages: string;
+};
+const ProductCard = ({ product }: { product: Product }) => {
   return (
     <div className="w-full mx-auto my-8">
       <div className="relative overflow-hidden rounded-lg shadow-lg group">
-        <Link href={"/products/1"} className="w-full h-84 overflow-hidden">
+        <Link
+          href={`/products/${product.id}`}
+          className="w-full h-84 overflow-hidden"
+        >
           <Image
             width={1000}
             height={1200}
-            src={product.image}
+            src={product.mainImage}
             alt={product.name}
             className="w-full h-full object-cover transition-transform duration-100 ease-in-out group-hover:opacity-0"
           />
           <Image
             width={1000}
             height={1200}
-            src={product.hoverImage}
+            src={product.otherImages}
             alt={product.name}
             className="w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-100 ease-in-out opacity-0 group-hover:opacity-100"
           />
