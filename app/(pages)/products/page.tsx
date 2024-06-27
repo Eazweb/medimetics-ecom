@@ -11,7 +11,13 @@ const AllProducts = () => {
   const [sortOption, setSortOption] = useState<string>("1");
   const { data, error, isLoading } = useGetAllProductsQuery();
 
-  // Ensure data is available before sorting
+  type Product = {
+    id: number;
+    name: string;
+    price: number;
+    mainImage: string;
+    otherImages: string;
+  };
   const sortedProducts = data
     ? [...data].sort((a, b) => {
         switch (sortOption) {
@@ -81,7 +87,7 @@ const AllProducts = () => {
           <div>Error loading products.</div>
         ) : (
           sortedProducts.map((product, index) => (
-            <ProductCard key={index} product={product} />
+            <ProductCard key={index} product={product as unknown as Product} />
           ))
         )}
       </div>
