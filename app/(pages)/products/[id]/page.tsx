@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SingleProductSkeleton from "@/app/temp/SingleProductSkeleton";
 import { useGetProductByIdQuery } from "@/providers/toolkit/features/GetAllProductsSlice";
 import { useParams } from "next/navigation";
@@ -8,17 +8,6 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { useSwipeable } from "react-swipeable";
 
-type Product = {
-  id: string;
-  name: string;
-  price: number;
-  description: string;
-  mainImage: string;
-  categories: Array<any>;
-  sizes: Array<any>;
-  colors: Array<any>;
-  otherImages: string;
-};
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data, error, isLoading } = useGetProductByIdQuery(id);
@@ -26,6 +15,7 @@ const ProductPage = () => {
   const [selectedSize, setSelectedSize] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [addToCartClicked, setAddToCartClicked] = useState<boolean>(false);
   const handlers = useSwipeable({
     onSwipedLeft: () =>
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length),
@@ -35,14 +25,43 @@ const ProductPage = () => {
       ),
   });
 
-  if (isLoading) return <SingleProductSkeleton />;
-  if (error) return <div>Error: fetch product with id {id} failed.</div>;
+  useEffect(() => {
+    if (addToCartClicked) {
+      if (data?.sizes && data.sizes.length > 0 && !selectedSize) {
+        setSelectedSize(data.sizes[0]);
+      }
+      if (data?.colors && data.colors.length > 0 && !selectedColor) {
+        setSelectedColor(data.colors[0]);
+      }
+      setAddToCartClicked(false);
+    }
+  }, [
+    addToCartClicked,
+    data?.sizes,
+    data?.colors,
+    selectedSize,
+    selectedColor,
+  ]);
 
+  if (isLoading) return <SingleProductSkeleton />;
+  if (error)
+    return (
+      <div>Error: Fetching product with id {id} failed. Please try again.</div>
+    );
   if (!data) return <div>Product not found.</div>;
 
-  const { name, description, mainImage, otherImages, price, sizes, colors } =
-    data as Product;
-  const images = [mainImage, ...otherImages.split(",")];
+  const { sizes, colors, mainImage, name, description, price, otherImages } =
+    data;
+  const images = [mainImage, ...(otherImages ? otherImages.split(",") : [])];
+
+  const handleAddToCart = () => {
+    setAddToCartClicked(true);
+    console.log(
+      `Product ID: ${id}, Size: ${selectedSize || sizes?.[0]}, Color: ${
+        selectedColor || colors?.[0]
+      }, Quantity: ${quantity}`
+    );
+  };
 
   return (
     <div className="container mx-auto p-4 md:flex">
@@ -53,11 +72,12 @@ const ProductPage = () => {
           className="w-full h-auto mb-4 rounded overflow-hidden"
         >
           <Image
-            width={400}
-            height={500}
+            width={1000}
+            height={1000}
             src={images[currentIndex]}
             alt="Product"
             className="w-full h-auto"
+            loading="lazy"
           />
         </div>
 
@@ -68,11 +88,12 @@ const ProductPage = () => {
               width={100}
               height={100}
               src={image}
-              alt="Product"
+              alt="Product thumbnail"
               className={`w-24 h-24 rounded object-contain ${
                 currentIndex === index ? "ring-2 ring-blue-500" : ""
               }`}
               onClick={() => setCurrentIndex(index)}
+              loading="lazy"
             />
           ))}
         </div>
@@ -82,18 +103,19 @@ const ProductPage = () => {
         <h1 className="text-3xl font-bold mb-4">{name}</h1>
         <p className="mb-4">{description}</p>
         <Badge className="mb-4">
-          {data?.categories?.map((category: any) => (
-            <span key={category?.id}>{category?.name}</span>
+          {data.categories.map((category) => (
+            <span key={category.id}>{category.name}</span>
           ))}
         </Badge>
 
         <p className="text-2xl font-semibold">₹{price}</p>
 
+        {/* Color selection */}
         {colors && colors.length > 0 && (
           <div className="mb-4">
             <h2 className="font-semibold mb-2">Color</h2>
             <div className="flex space-x-2">
-              {colors.map((color: any, index: number) => (
+              {colors.map((color, index) => (
                 <button
                   key={index}
                   className={`w-8 h-8 rounded-full border-2 ${
@@ -103,6 +125,7 @@ const ProductPage = () => {
                   }`}
                   style={{ backgroundColor: color }}
                   onClick={() => setSelectedColor(color)}
+                  aria-label={`Select color ${color}`}
                 />
               ))}
             </div>
@@ -113,7 +136,7 @@ const ProductPage = () => {
           <div className="mb-4">
             <h2 className="font-semibold mb-2">Size</h2>
             <div className="flex space-x-2">
-              {sizes.map((size: string, index: number) => (
+              {sizes.map((size, index) => (
                 <button
                   key={index}
                   className={`px-4 py-2 border-2 rounded ${
@@ -148,7 +171,12 @@ const ProductPage = () => {
             ))}
           </select>
         </div>
-        <Button className="text-white px-6 py-2 rounded">Add to Cart</Button>
+        <Button
+          onClick={handleAddToCart}
+          className="text-white px-6 py-2 rounded"
+        >
+          Add to Cart
+        </Button>
       </div>
     </div>
   );
