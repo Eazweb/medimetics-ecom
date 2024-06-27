@@ -19,9 +19,9 @@ const ToastCartButton = ({ product }: any) => {
   return (
     <button
       onClick={handleClick}
-      className="mt-4 py-2 px-4 bg-blue-500 text-white rounded-lg flex items-center justify-center hover:bg-blue-600 w-full sm:w-auto"
+      className="mt-4 py-2 px-4 bg-black text-white rounded-lg flex items-center justify-center hover:bg-gray-900  sm:w-auto"
     >
-      <ShoppingCart className="w-6 h-6 sm:w-5 sm:h-5 mr-2" />
+      <ShoppingCart className="w-6 h-6 sm:w-5 sm:h-5 md:mr-2" />
       <span className="hidden sm:block">Add to Cart</span>
     </button>
   );

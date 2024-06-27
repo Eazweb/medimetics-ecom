@@ -33,8 +33,12 @@ const ProductCard = ({ product }: { product: Product }) => {
           />
         </Link>
         <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black via-transparent to-transparent group-hover:opacity-100 transition-opacity duration-100 ease-in-out opacity-100">
-          <h2 className="text-white text-xl font-semibold">{product.name}</h2>
-          <p className="text-white text-lg">₹{product.price}</p>
+          <h2 className="text-muted  md:text-xl bg-black/10 p-1 rounded font-bold">
+            {product.name}
+          </h2>
+          <p className="text-muted text-lg bg-black/10 p-1 rounded font-semibold">
+            ₹{product.price}
+          </p>
           <ToastCartButton product={product} />
         </div>
       </div>
