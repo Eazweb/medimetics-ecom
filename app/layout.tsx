@@ -8,6 +8,7 @@ import { Toaster } from "@/components/ui/toaster";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import ReduxProvider from "@/providers/ReduxProvider";
 import { Toaster as ToastMsg } from "react-hot-toast";
+import ScrollToTopButton from "./components/TopScroller";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -31,6 +32,7 @@ export default function RootLayout({
               <Navbar />
               <ToastMsg position="bottom-right" />
               {children}
+              <ScrollToTopButton />
               <Toaster />
               <Footer />
             </ReduxProvider>
