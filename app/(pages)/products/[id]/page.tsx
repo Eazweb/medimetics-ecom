@@ -1,56 +1,99 @@
 "use client";
+import React, { useState } from "react";
+import SingleProductSkeleton from "@/app/temp/SingleProductSkeleton";
+import { useGetProductByIdQuery } from "@/providers/toolkit/features/GetAllProductsSlice";
+import { useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import React from "react";
+import Image from "next/image";
+import { Badge } from "@/components/ui/badge";
+import { useSwipeable } from "react-swipeable";
 
-interface ProductProps {
-  product: {
-    title: string;
-    description: string;
-    images: string[];
-    colors?: string[];
-    sizes?: string[];
-  };
-}
+type Product = {
+  id: string;
+  name: string;
+  price: number;
+  description: string;
+  mainImage: string;
+  categories: Array<any>;
+  sizes: Array<any>;
+  colors: Array<any>;
+  otherImages: string;
+};
+const ProductPage = () => {
+  const { id } = useParams<{ id: string }>();
+  const { data, error, isLoading } = useGetProductByIdQuery(id);
+  const [selectedColor, setSelectedColor] = useState<string>("");
+  const [selectedSize, setSelectedSize] = useState<string>("");
+  const [quantity, setQuantity] = useState<number>(1);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const handlers = useSwipeable({
+    onSwipedLeft: () =>
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length),
+    onSwipedRight: () =>
+      setCurrentIndex(
+        (prevIndex) => (prevIndex - 1 + images.length) % images.length
+      ),
+  });
 
-// Product component definition
-const Product: React.FC<ProductProps> = ({ product }) => {
-  const { title, description, images, colors, sizes } = product;
-  const [selectedImage, setSelectedImage] = React.useState(images[0]);
-  const [selectedColor, setSelectedColor] = React.useState(
-    colors ? colors[0] : ""
-  );
-  const [selectedSize, setSelectedSize] = React.useState(sizes ? sizes[0] : "");
-  const [quantity, setQuantity] = React.useState(1);
+  if (isLoading) return <SingleProductSkeleton />;
+  if (error) return <div>Error: fetch product with id {id} failed.</div>;
+
+  if (!data) return <div>Product not found.</div>;
+
+  const { name, description, mainImage, otherImages, price, sizes, colors } =
+    data as Product;
+  const images = [mainImage, ...otherImages.split(",")];
 
   return (
     <div className="container mx-auto p-4 md:flex">
       {/* Image and thumbnail section */}
       <div className="md:w-1/2">
-        <img src={selectedImage} alt="Product" className="w-full h-auto mb-4" />
+        <div
+          {...handlers}
+          className="w-full h-auto mb-4 rounded overflow-hidden"
+        >
+          <Image
+            width={400}
+            height={500}
+            src={images[currentIndex]}
+            alt="Product"
+            className="w-full h-auto"
+          />
+        </div>
+
         <div className="flex space-x-2">
           {images.map((image, index) => (
-            <img
+            <Image
               key={index}
+              width={100}
+              height={100}
               src={image}
-              alt={`Thumbnail ${index + 1}`}
-              className={`w-24 h-24 cursor-pointer border ${
-                selectedImage === image ? "border-blue-500" : "border-gray-300"
+              alt="Product"
+              className={`w-24 h-24 rounded object-contain ${
+                currentIndex === index ? "ring-2 ring-blue-500" : ""
               }`}
-              onClick={() => setSelectedImage(image)}
+              onClick={() => setCurrentIndex(index)}
             />
           ))}
         </div>
       </div>
       {/* Product details section */}
       <div className="md:w-1/2 md:pl-8">
-        <h1 className="text-3xl font-bold mb-4">{title}</h1>
+        <h1 className="text-3xl font-bold mb-4">{name}</h1>
         <p className="mb-4">{description}</p>
-        {/* Color selection */}
-        {colors && (
+        <Badge className="mb-4">
+          {data?.categories?.map((category: any) => (
+            <span key={category?.id}>{category?.name}</span>
+          ))}
+        </Badge>
+
+        <p className="text-2xl font-semibold">₹{price}</p>
+
+        {colors && colors.length > 0 && (
           <div className="mb-4">
             <h2 className="font-semibold mb-2">Color</h2>
             <div className="flex space-x-2">
-              {colors.map((color, index) => (
+              {colors.map((color: any, index: number) => (
                 <button
                   key={index}
                   className={`w-8 h-8 rounded-full border-2 ${
@@ -66,14 +109,14 @@ const Product: React.FC<ProductProps> = ({ product }) => {
           </div>
         )}
         {/* Size selection */}
-        {sizes && (
+        {sizes && sizes.length > 0 && (
           <div className="mb-4">
             <h2 className="font-semibold mb-2">Size</h2>
             <div className="flex space-x-2">
-              {sizes.map((size, index) => (
+              {sizes.map((size: string, index: number) => (
                 <button
                   key={index}
-                  className={`px-4 py-2 border ${
+                  className={`px-4 py-2 border-2 rounded ${
                     selectedSize === size
                       ? "border-blue-500"
                       : "border-gray-300"
@@ -111,29 +154,4 @@ const Product: React.FC<ProductProps> = ({ product }) => {
   );
 };
 
-// App component definition
-const App: React.FC = () => {
-  // Product data object
-  const productData = {
-    title: "Stylish Shirt",
-    description:
-      "A very stylish shirt that comes in multiple colors and sizes.",
-    images: [
-      "https://via.placeholder.com/400x400.png?text=Main+Image",
-      "https://via.placeholder.com/100x100.png?text=Image+1",
-      "https://via.placeholder.com/100x100.png?text=Image+2",
-      "https://via.placeholder.com/100x100.png?text=Image+3",
-    ],
-    colors: ["#FF0000", "#00FF00", "#0000FF"],
-    sizes: ["S", "M", "L", "XL"],
-  };
-
-  // Passing product data as props to the Product component
-  return (
-    <div className="App">
-      <Product product={productData} />
-    </div>
-  );
-};
-
-export default App;
+export default ProductPage;
