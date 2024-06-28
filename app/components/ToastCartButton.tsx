@@ -1,20 +1,38 @@
 "use client";
 import { useToast } from "@/components/ui/use-toast";
 import { ShoppingCart } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const ToastCartButton = ({ product }: any) => {
+  const { data: session } = useSession();
+  const { push } = useRouter();
   const { toast } = useToast();
   const handleClick = () => {
-    toast({
-      title: "Added to Cart",
-      description: `${product.name} was added to your cart`,
-      variant: "default",
-      duration: 1500,
-      style: {
-        backgroundColor: "#191919",
-        color: "#fff",
-      },
-    });
+    if (!session?.user) {
+      toast({
+        title: "Please login to add to cart",
+        description: "You need to be logged in to add items to your cart",
+        variant: "default",
+        duration: 1500,
+        style: {
+          backgroundColor: "#191919",
+          color: "#fff",
+        },
+      });
+      return push("/login");
+    } else {
+      toast({
+        title: "Added to Cart",
+        description: `${product.name} was added to your cart`,
+        variant: "default",
+        duration: 1500,
+        style: {
+          backgroundColor: "#191919",
+          color: "#fff",
+        },
+      });
+    }
   };
   return (
     <button

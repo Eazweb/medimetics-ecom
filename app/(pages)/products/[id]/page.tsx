@@ -2,11 +2,13 @@
 import React, { useEffect, useState } from "react";
 import SingleProductSkeleton from "@/app/temp/SingleProductSkeleton";
 import { useGetProductByIdQuery } from "@/providers/toolkit/features/GetAllProductsSlice";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { useSwipeable } from "react-swipeable";
+import { useSession } from "next-auth/react";
+import { useToast } from "@/components/ui/use-toast";
 
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -16,6 +18,9 @@ const ProductPage = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [addToCartClicked, setAddToCartClicked] = useState<boolean>(false);
+  const { data: session } = useSession();
+  const { push } = useRouter();
+  const { toast } = useToast();
   const handlers = useSwipeable({
     onSwipedLeft: () =>
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length),
@@ -55,12 +60,26 @@ const ProductPage = () => {
   const images = [mainImage, ...(otherImages ? otherImages.split(",") : [])];
 
   const handleAddToCart = () => {
-    setAddToCartClicked(true);
-    console.log(
-      `Product ID: ${id}, Size: ${selectedSize || sizes?.[0]}, Color: ${
-        selectedColor || colors?.[0]
-      }, Quantity: ${quantity}`
-    );
+    if (!session?.user) {
+      toast({
+        title: "Please login to add to cart",
+        description: "You need to be logged in to add items to your cart",
+        variant: "default",
+        duration: 1500,
+        style: {
+          backgroundColor: "#191919",
+          color: "#fff",
+        },
+      });
+      return push("/login");
+    } else {
+      setAddToCartClicked(true);
+      console.log(
+        `Product ID: ${id}, Size: ${selectedSize || sizes?.[0]}, Color: ${
+          selectedColor || colors?.[0]
+        }, Quantity: ${quantity}`
+      );
+    }
   };
 
   return (
