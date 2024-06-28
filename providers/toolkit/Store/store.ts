@@ -3,6 +3,7 @@ import { UserRegisterSlice } from "../features/RegisterUserSlice";
 import { CreateProductSlice } from "../features/CreateProductSlice";
 import { productsApi } from "../features/GetAllProductsSlice";
 import { userAPI } from "../features/GetAllUserSlice";
+import { AddToCartSlice } from "../features/AddToCartSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -11,6 +12,7 @@ export const makeStore = () => {
       [userAPI.reducerPath]: userAPI.reducer,
       user: UserRegisterSlice.reducer,
       product: CreateProductSlice.reducer,
+      cart: AddToCartSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(productsApi.middleware, userAPI.middleware),

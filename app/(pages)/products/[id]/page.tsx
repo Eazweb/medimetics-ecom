@@ -9,7 +9,12 @@ import { Badge } from "@/components/ui/badge";
 import { useSwipeable } from "react-swipeable";
 import { useSession } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
+import { useAppDispatch } from "@/providers/toolkit/hooks/hooks";
+import { AddToCart } from "@/providers/toolkit/features/AddToCartSlice";
 
+interface SessionUser {
+  id: string;
+}
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data, error, isLoading } = useGetProductByIdQuery(id);
@@ -21,6 +26,7 @@ const ProductPage = () => {
   const { data: session } = useSession();
   const { push } = useRouter();
   const { toast } = useToast();
+  const dispatch = useAppDispatch();
   const handlers = useSwipeable({
     onSwipedLeft: () =>
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length),
@@ -74,6 +80,16 @@ const ProductPage = () => {
       return push("/login");
     } else {
       setAddToCartClicked(true);
+      const userId = (session.user as SessionUser).id;
+      dispatch(
+        AddToCart({
+          userId: userId,
+          productId: id,
+          quantity,
+          color: selectedColor || colors?.[0],
+          size: selectedSize || sizes?.[0],
+        })
+      );
       console.log(
         `Product ID: ${id}, Size: ${selectedSize || sizes?.[0]}, Color: ${
           selectedColor || colors?.[0]
