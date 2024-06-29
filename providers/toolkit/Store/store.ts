@@ -5,6 +5,7 @@ import { productsApi } from "../features/GetAllProductsSlice";
 import { userAPI } from "../features/GetAllUserSlice";
 import { AddToCartSlice } from "../features/AddToCartSlice";
 import { GetCartItemSlice } from "../features/GetUserAllCartitems";
+import { DeleteCartItemSlice } from "../features/DeleteCartItemSlice";
 
 export const makeStore = () => {
   return configureStore({
@@ -15,6 +16,7 @@ export const makeStore = () => {
       product: CreateProductSlice.reducer,
       cart: AddToCartSlice.reducer,
       cartItems: GetCartItemSlice.reducer,
+      deleteCartItem: DeleteCartItemSlice.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware().concat(productsApi.middleware, userAPI.middleware),

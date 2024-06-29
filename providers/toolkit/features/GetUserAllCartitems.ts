@@ -2,12 +2,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export interface CreateCartProduct {
   userId: string;
-  items: [];
+  items: {
+    data: [];
+  };
 }
 
 const initialState: CreateCartProduct = {
   userId: "",
-  items: [],
+  items: {
+    data: [],
+  },
 };
 
 export const GetCartItems = createAsyncThunk(
