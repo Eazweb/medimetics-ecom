@@ -90,11 +90,6 @@ const ProductPage = () => {
           size: selectedSize || sizes?.[0],
         })
       );
-      console.log(
-        `Product ID: ${id}, Size: ${selectedSize || sizes?.[0]}, Color: ${
-          selectedColor || colors?.[0]
-        }, Quantity: ${quantity}`
-      );
     }
   };
 

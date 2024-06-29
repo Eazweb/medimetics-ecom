@@ -32,7 +32,13 @@ export const POST = async (req: NextRequest) => {
         userId: userId,
       },
       include: {
-        product: true,
+        product: {
+          select: {
+            name: true,
+            mainImage: true,
+            price: true,
+          },
+        },
       },
     });
 
