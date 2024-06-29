@@ -73,6 +73,7 @@ const ShoppingCart = () => {
     );
     setCartItems(cartItems.filter((item) => item.id !== product.id));
   };
+  const cartItemsNotEmpty = cartItems.length > 0;
 
   return (
     <div className="flex flex-col md:flex-row p-4 bg-gray-100 relative">
@@ -147,7 +148,12 @@ const ShoppingCart = () => {
             <span>₹{totalAmount + 99}</span>
           </div>
         </div>
-        <button className="w-full bg-blue-600 text-white py-3 px-4 rounded-md text-lg font-semibold hover:bg-blue-700 transition duration-300">
+        <button
+          className={`w-full ${
+            cartItemsNotEmpty ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400"
+          } text-white py-3 px-4 rounded-md text-lg font-semibold transition duration-300`}
+          disabled={!cartItemsNotEmpty}
+        >
           Checkout
         </button>
       </div>
