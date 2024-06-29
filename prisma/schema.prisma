@@ -8,16 +8,16 @@ datasource db {
 }
 
 model User {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  id        String         @id @default(auto()) @map("_id") @db.ObjectId
   name      String
-  email     String    @unique
+  email     String         @unique
   password  String
-  isAdmin   Boolean   @default(false)
+  isAdmin   Boolean        @default(false)
   products  Product[]
   cart      Cart[]
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  Order     Order[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+  addresses OrderAddress[]
 }
 
 model Product {
@@ -32,7 +32,6 @@ model Product {
   colors      String[]
   categories  Category[]
   cart        Cart[]
-  order       Order[]
   userId      String     @db.ObjectId
   user        User       @relation(fields: [userId], references: [id])
 }
@@ -55,34 +54,14 @@ model Cart {
   size      String?
 }
 
-model Order {
-  id            String      @id @default(auto()) @map("_id") @db.ObjectId
-  quantity      Int
-  status        OrderStatus @default(PENDING)
-  paymentMethod String
-  addressId     String      @db.ObjectId
-  address       Address     @relation(fields: [addressId], references: [id])
-  usersId       String      @db.ObjectId
-  user          User        @relation(fields: [usersId], references: [id])
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
-  Product       Product?    @relation(fields: [productId], references: [id])
-  productId     String?     @db.ObjectId
-}
-
-enum OrderStatus {
-  PENDING
-  COMPLETED
-  CANCELLED
-}
-
-model Address {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  street      String
-  city        String
-  state       String
-  country     String
-  postalCode  String
-  phoneNumber String
-  order       Order[]
+model OrderAddress {
+  id        String @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String @db.ObjectId
+  user      User   @relation(fields: [userId], references: [id])
+  firstName String
+  lastName  String
+  address   String
+  city      String
+  state     String
+  zip       String
 }
