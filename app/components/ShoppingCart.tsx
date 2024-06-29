@@ -9,6 +9,7 @@ import {
 } from "@/providers/toolkit/hooks/hooks";
 import { TrashIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -148,14 +149,24 @@ const ShoppingCart = () => {
             <span>₹{totalAmount + 99}</span>
           </div>
         </div>
-        <button
-          className={`w-full ${
-            cartItemsNotEmpty ? "bg-blue-600 hover:bg-blue-700" : "bg-gray-400"
-          } text-white py-3 px-4 rounded-md text-lg font-semibold transition duration-300`}
-          disabled={!cartItemsNotEmpty}
+        <Link
+          href={
+            session?.user
+              ? `/checkout?totalAmount=${totalAmount}&shipping=99`
+              : "login"
+          }
         >
-          Checkout
-        </button>
+          <button
+            className={`w-full ${
+              cartItemsNotEmpty
+                ? "bg-blue-600 hover:bg-blue-700"
+                : "bg-gray-400"
+            } text-white py-3 px-4 rounded-md text-lg font-semibold transition duration-300`}
+            disabled={!cartItemsNotEmpty}
+          >
+            Proceed to Checkout
+          </button>
+        </Link>
       </div>
     </div>
   );
