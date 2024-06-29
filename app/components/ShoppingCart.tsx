@@ -9,8 +9,7 @@ import {
 import { TrashIcon } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Product {
   id: string;
@@ -38,11 +37,15 @@ type RootState = {
 const ShoppingCart = () => {
   const { data: session } = useSession();
   const dispatch = useAppDispatch();
-  const router = useRouter();
   const userId = session?.user ? (session.user as User).id : null;
-  const cartItems = useAppSelector(
+  const cartItemsFromStore = useAppSelector(
     (state: RootState) => state.cartItems.items.data
   );
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+
+  useEffect(() => {
+    setCartItems(cartItemsFromStore);
+  }, [cartItemsFromStore]);
 
   useEffect(() => {
     if (userId) {
@@ -64,6 +67,7 @@ const ShoppingCart = () => {
         product: { id: product.productId },
       })
     );
+    setCartItems(cartItems.filter((item) => item.id !== product.id));
   };
 
   return (
