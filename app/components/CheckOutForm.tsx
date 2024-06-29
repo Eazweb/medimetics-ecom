@@ -55,14 +55,6 @@ const CheckOutForm: React.FC = () => {
   return (
     <div className="bg-gray-100 ">
       <div className="w-full max-w-3xl mx-auto p-8">
-        <div className="bg-blue-100 p-4 rounded-lg shadow">
-          <p className="text-lg text-blue-800 font-semibold">
-            Total Amount:{" "}
-            <span className="text-xl font-bold text-blue-900">
-              ₹{totalAmount.toFixed(2)}
-            </span>
-          </p>
-        </div>
         <div className="bg-white  p-8 rounded-lg shadow-md border">
           <h1 className="text-2xl font-bold text-gray-800  mb-4">Checkout</h1>
 
@@ -171,64 +163,15 @@ const CheckOutForm: React.FC = () => {
                 </div>
               </div>
             </div>
-            {/* Payment Information */}
-            <div>
-              <h2 className="text-xl font-semibold text-gray-700  mb-2">
-                Payment Information
-              </h2>
-              <div className="mt-4 relative">
-                <FiCreditCard className="absolute left-3 top-3 text-gray-400" />
-                <input
-                  type="text"
-                  id="card_number"
-                  placeholder="Card Number"
-                  {...register("card_number", {
-                    required: "Card number is required",
-                  })}
-                  className="w-full rounded-lg border py-2 pl-10 pr-3   "
-                />
-                {errors.card_number && (
-                  <span className="text-red-500 text-sm">
-                    {errors.card_number.message}
-                  </span>
-                )}
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                <div className="relative">
-                  <FiCalendar className="absolute left-3 top-3 text-gray-400" />
-                  <input
-                    type="text"
-                    id="exp_date"
-                    placeholder="Expiration Date"
-                    {...register("exp_date", {
-                      required: "Expiration date is required",
-                    })}
-                    className="w-full rounded-lg border py-2 pl-10 pr-3   "
-                  />
-                  {errors.exp_date && (
-                    <span className="text-red-500 text-sm">
-                      {errors.exp_date.message}
-                    </span>
-                  )}
-                </div>
-                <div className="relative">
-                  <FiLock className="absolute left-3 top-3 text-gray-400" />
-                  <input
-                    type="text"
-                    id="cvv"
-                    placeholder="CVV"
-                    {...register("cvv", { required: "CVV is required" })}
-                    className="w-full rounded-lg border py-2 pl-10 pr-3   "
-                  />
-                  {errors.cvv && (
-                    <span className="text-red-500 text-sm">
-                      {errors.cvv.message}
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-            <div className="mt-8 flex justify-end">
+
+            <div className="mt-8 grid md:grid-cols-2">
+              <p className="text-lg font-semibold my-2 md:my-0">
+                Total Amount:{" "}
+                <span className="text-xl font-bold ">
+                  ₹{totalAmount.toFixed(2)}
+                </span>
+              </p>
+
               <button
                 type="submit"
                 className="cursor-pointer transition-all bg-blue-500 text-white px-6 py-2 rounded-lg
