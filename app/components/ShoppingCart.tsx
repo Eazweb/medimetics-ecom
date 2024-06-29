@@ -1,5 +1,6 @@
 "use client";
 
+import Loader from "@/components/Loader";
 import { DeleteItem } from "@/providers/toolkit/features/DeleteCartItemSlice";
 import { GetCartItems } from "@/providers/toolkit/features/GetUserAllCartitems";
 import {
@@ -41,15 +42,18 @@ const ShoppingCart = () => {
   const cartItemsFromStore = useAppSelector(
     (state: RootState) => state.cartItems.items.data
   );
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<Product[]>([]);
 
   useEffect(() => {
     setCartItems(cartItemsFromStore);
+    setIsLoading(false);
   }, [cartItemsFromStore]);
 
   useEffect(() => {
     if (userId) {
       dispatch(GetCartItems(userId));
+      setIsLoading(true);
     }
   }, [userId, dispatch]);
 
@@ -74,7 +78,12 @@ const ShoppingCart = () => {
     <div className="flex flex-col md:flex-row p-4 bg-gray-100 relative">
       <div className="md:w-3/4 p-4 bg-white rounded-lg shadow-md mb-6 md:mb-0">
         <h2 className="text-3xl font-bold mb-6 text-gray-800">Shopping Cart</h2>
-        {Array.isArray(cartItems) && cartItems.length > 0 ? (
+        {isLoading ? (
+          <div className="w-full items-center justify-center flex">
+            {" "}
+            <Loader />
+          </div>
+        ) : Array.isArray(cartItems) && cartItems.length > 0 ? (
           cartItems.map((product) => (
             <div
               key={product.id}
