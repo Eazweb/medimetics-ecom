@@ -1,14 +1,10 @@
 "use client";
+import { createAddress } from "@/providers/toolkit/features/CreateAddressForOrderSlice";
+import { useAppDispatch } from "@/providers/toolkit/hooks/hooks";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import {
-  FiUser,
-  FiMail,
-  FiHome,
-  FiCreditCard,
-  FiCalendar,
-  FiLock,
-} from "react-icons/fi";
+import { FiUser, FiMail, FiHome } from "react-icons/fi";
 
 type FormData = {
   first_name: string;
@@ -22,6 +18,10 @@ type FormData = {
   cvv: string;
 };
 
+interface User {
+  id: string;
+}
+
 const CheckOutForm: React.FC = () => {
   const {
     register,
@@ -29,6 +29,10 @@ const CheckOutForm: React.FC = () => {
     formState: { errors },
   } = useForm<FormData>();
   const [totalAmount, setTotalAmount] = useState<number>(0);
+  const dispatch = useAppDispatch();
+  const { data: session } = useSession();
+  const userId = session?.user ? (session.user as User).id : null;
+
   useEffect(() => {
     const queryParams = new URLSearchParams(window.location.search);
     const totalAmount = queryParams.get("totalAmount");
@@ -39,7 +43,18 @@ const CheckOutForm: React.FC = () => {
   }, []);
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
-    console.log(data);
+    if (userId) {
+      dispatch(
+        createAddress({
+          userId: userId as string,
+          firstName: data.first_name,
+          lastName: data.last_name,
+          ...data,
+        })
+      );
+    } else {
+      console.error("User ID is not available");
+    }
   };
   useEffect(() => {
     const currentURL = window.location.href;

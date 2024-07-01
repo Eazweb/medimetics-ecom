@@ -18,6 +18,7 @@ model User {
   createdAt DateTime       @default(now())
   updatedAt DateTime       @updatedAt
   addresses OrderAddress[]
+  orders    Order[]
 }
 
 model Product {
@@ -32,6 +33,7 @@ model Product {
   colors      String[]
   categories  Category[]
   cart        Cart[]
+  orders      Order[]
   userId      String     @db.ObjectId
   user        User       @relation(fields: [userId], references: [id])
 }
@@ -55,13 +57,35 @@ model Cart {
 }
 
 model OrderAddress {
-  id        String @id @default(auto()) @map("_id") @db.ObjectId
-  userId    String @db.ObjectId
-  user      User   @relation(fields: [userId], references: [id])
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String  @db.ObjectId
+  user      User    @relation(fields: [userId], references: [id])
   firstName String
   lastName  String
   address   String
   city      String
   state     String
   zip       String
+  order     Order[]
+}
+
+model Order {
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  quantity      Int
+  status        OrderStatus  @default(PENDING)
+  paymentMethod String
+  usersId       String       @db.ObjectId
+  user          User         @relation(fields: [usersId], references: [id])
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  Product       Product?     @relation(fields: [productId], references: [id])
+  productId     String?      @db.ObjectId
+  addressId     String       @db.ObjectId
+  address       OrderAddress @relation(fields: [addressId], references: [id])
+}
+
+enum OrderStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
 }
