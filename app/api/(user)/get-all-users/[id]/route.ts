@@ -21,7 +21,7 @@ export const GET = async (_: any, { params }: { params: { id: string } }) => {
           isAdmin: true,
           createdAt: true,
           updatedAt: true,
-          Order: true,
+          orders: true,
         },
       });
 
