@@ -1,4 +1,5 @@
 "use client";
+import { useToast } from "@/components/ui/use-toast";
 import { createAddress } from "@/providers/toolkit/features/CreateAddressForOrderSlice";
 import { useAppDispatch } from "@/providers/toolkit/hooks/hooks";
 import { useSession } from "next-auth/react";
@@ -26,10 +27,12 @@ const CheckOutForm: React.FC = () => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>();
   const [totalAmount, setTotalAmount] = useState<number>(0);
   const dispatch = useAppDispatch();
+  const { toast } = useToast();
   const { data: session } = useSession();
   const userId = session?.user ? (session.user as User).id : null;
 
@@ -52,8 +55,14 @@ const CheckOutForm: React.FC = () => {
           ...data,
         })
       );
+      reset();
     } else {
-      console.error("User ID is not available");
+      toast({
+        title: "Error",
+        description: "Please login to place an order",
+        duration: 3000,
+        variant: "destructive",
+      });
     }
   };
   useEffect(() => {
