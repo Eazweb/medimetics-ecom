@@ -23,6 +23,7 @@ const ProductPage = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [addToCartClicked, setAddToCartClicked] = useState<boolean>(false);
+  const [isAddingToCart, setIsAddingToCart] = useState<boolean>(false);
   const { data: session } = useSession();
   const { push } = useRouter();
   const { toast } = useToast();
@@ -66,6 +67,7 @@ const ProductPage = () => {
   const images = [mainImage, ...(otherImages ? otherImages.split(",") : [])];
 
   const handleAddToCart = () => {
+    setIsAddingToCart(true);
     if (!session?.user) {
       toast({
         title: "Please login to add to cart",
@@ -77,6 +79,7 @@ const ProductPage = () => {
           color: "#fff",
         },
       });
+      setIsAddingToCart(false);
       return push("/login");
     } else {
       setAddToCartClicked(true);
@@ -89,7 +92,9 @@ const ProductPage = () => {
           color: selectedColor || colors?.[0],
           size: selectedSize || sizes?.[0],
         })
-      );
+      ).finally(() => {
+        setIsAddingToCart(false);
+      });
     }
   };
 
@@ -204,8 +209,9 @@ const ProductPage = () => {
         <Button
           onClick={handleAddToCart}
           className="text-white px-6 py-2 rounded"
+          disabled={isAddingToCart} // Step 5
         >
-          Add to Cart
+          {isAddingToCart ? "Adding..." : "Add to Cart"}
         </Button>
       </div>
     </div>
