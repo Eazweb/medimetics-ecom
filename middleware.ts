@@ -24,7 +24,8 @@ export async function middleware(req: NextRequest) {
   if (
     (pathname === "/cart" ||
       pathname === "/order" ||
-      pathname === "/dashboard") &&
+      pathname === "/dashboard" ||
+      pathname === "/checkout") &&
     !session
   ) {
     return NextResponse.redirect(new URL("/login", req.url));
@@ -64,5 +65,7 @@ export const config = {
     "/dashboard",
     "/api/:path*",
     "/dashboard/:path*",
+    "/checkout",
+    "/checkout/:path*",
   ],
 };
