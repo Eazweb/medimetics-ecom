@@ -8,6 +8,7 @@ import {
 import { useSession } from "next-auth/react";
 import Image from "next/image";
 import { useEffect } from "react";
+import OrderSkeletons from "../temp/OrderSkeletons";
 
 interface User {
   id: string;
@@ -57,7 +58,11 @@ const AllOrders = () => {
   const { orders, loading } = ordersState;
 
   if (loading) {
-    return <div className="text-center py-8">Loading your orders...</div>;
+    return (
+      <div className="container mx-auto py-8">
+        <OrderSkeletons />
+      </div>
+    );
   }
 
   if (!loading && orders.length === 0) {
