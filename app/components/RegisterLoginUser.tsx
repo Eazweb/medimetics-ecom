@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { useForm } from "react-hook-form";
-import { FcGoogle } from "react-icons/fc";
 import { signIn } from "next-auth/react";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
@@ -17,7 +16,8 @@ interface SignupProps {
 
 const RegisterLoginUser = () => {
   const [showPassword, setShowPassword] = useState<Boolean>(false);
-  const [isLogin, setIsLogin] = useState<Boolean>(false);
+  const [isLogin, setIsLogin] = useState<Boolean>(!false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const route = useRouter();
   const dispatch = useAppDispatch();
@@ -33,6 +33,7 @@ const RegisterLoginUser = () => {
   };
 
   const onSubmit = async (data: SignupProps) => {
+    setIsLoading(true);
     if (isLogin) {
       try {
         const user = await signIn("credentials", {
@@ -40,6 +41,7 @@ const RegisterLoginUser = () => {
           email: data.email,
           password: data.password,
         });
+        setIsLoading(true);
         if (user?.error) {
           toast({
             title: "Error",
@@ -68,11 +70,25 @@ const RegisterLoginUser = () => {
           duration: 3000,
           variant: "destructive",
         });
+      } finally {
+        setIsLoading(false);
       }
     } else {
-      dispatch(registerUser(data));
-      reset();
-      setIsLogin(!isLogin);
+      try {
+        await dispatch(registerUser(data)).unwrap();
+        reset();
+        setIsLogin(!isLogin);
+      } catch (error) {
+        console.error(error);
+        toast({
+          title: "Error",
+          description: "Registration failed",
+          duration: 3000,
+          variant: "destructive",
+        });
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -174,14 +190,9 @@ const RegisterLoginUser = () => {
           <button
             className="w-full bg-gray-900 text-white font-bold py-2 px-4 rounded-md hover:bg-gray-800 mb-4"
             type="submit"
+            disabled={isLoading}
           >
-            {isLogin ? "Login" : "Sign Up"}
-          </button>
-          <button
-            className="w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-md flex items-center justify-center mb-4"
-            type="button"
-          >
-            <FcGoogle className="mr-2" /> Sign in with Google
+            {isLoading ? "Loading..." : isLogin ? "Login" : "Sign Up"}
           </button>
           <div className="mt-4 text-base text-blue-gray-700">
             {isLogin ? "Don't have an account? " : "Already have an account? "}
