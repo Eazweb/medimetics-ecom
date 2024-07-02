@@ -22,6 +22,7 @@ export const POST = async (req: NextRequest) => {
             mainImage: true,
           },
         },
+        address: true,
       },
     });
     return NextResponse.json({ orders, status: 200 });

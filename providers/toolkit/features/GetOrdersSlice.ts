@@ -16,7 +16,7 @@ export const GetOrders = createAsyncThunk(
         throw new Error("Failed to fetch orders");
       }
       const orders = await response.json();
-      return orders;
+      return orders?.orders;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -30,6 +30,19 @@ export const GetOrdersSlice = createSlice({
     error: null,
   },
   reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(GetOrders.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(GetOrders.fulfilled, (state, { payload }) => {
+      state.orders = payload;
+      state.loading = false;
+    });
+    builder.addCase(GetOrders.rejected, (state, { payload }) => {
+      state.loading = false;
+      console.log(payload);
+    });
+  },
 });
 
 export default GetOrdersSlice.reducer;
