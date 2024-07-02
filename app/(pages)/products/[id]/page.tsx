@@ -209,7 +209,7 @@ const ProductPage = () => {
         <Button
           onClick={handleAddToCart}
           className="text-white px-6 py-2 rounded"
-          disabled={isAddingToCart} // Step 5
+          disabled={isAddingToCart}
         >
           {isAddingToCart ? "Adding..." : "Add to Cart"}
         </Button>
