@@ -152,7 +152,7 @@ const ShoppingCart = () => {
         <Link
           href={
             session?.user
-              ? `/checkout?totalAmount=${totalAmount}&shipping=99`
+              ? `/checkout?totalAmount=${totalAmount}&shipping=99&Id=${userId}`
               : "login"
           }
         >

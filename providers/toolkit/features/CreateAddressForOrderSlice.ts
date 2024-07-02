@@ -24,7 +24,7 @@ export const createAddress = createAsyncThunk(
   "address/create",
   async (addressData: CreateAddressForOrderState, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/create-address", {
+      const response = await fetch("/api/order", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

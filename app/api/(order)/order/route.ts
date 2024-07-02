@@ -3,17 +3,32 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
   try {
-    const { quantity, usersId, productId, addressId } = await req.json();
-    if (!quantity || !usersId || !productId || !addressId) {
+    const { userId, firstName, lastName, address, city, state, zip } =
+      await req.json();
+
+    const missingFields = [];
+
+    if (!userId) missingFields.push("userId");
+    if (!firstName) missingFields.push("firstName");
+    if (!lastName) missingFields.push("lastName");
+    if (!address) missingFields.push("address");
+    if (!city) missingFields.push("city");
+    if (!state) missingFields.push("state");
+    if (!zip) missingFields.push("zip");
+
+    if (missingFields.length > 0) {
       return NextResponse.json(
-        { message: "All fields are required" },
+        {
+          message: `All fields are required. Missing: ${missingFields.join(
+            ", "
+          )}`,
+        },
         { status: 400 }
       );
     }
+
     const userExists = await prismaDB.user.findUnique({
-      where: {
-        id: usersId,
-      },
+      where: { id: userId },
     });
     if (!userExists) {
       return NextResponse.json(
@@ -21,51 +36,42 @@ export const POST = async (req: NextRequest) => {
         { status: 404 }
       );
     }
-    const productExists = await prismaDB.product.findUnique({
-      where: {
-        id: productId,
-      },
+
+    const products = await prismaDB.cart.findMany({
+      where: { userId: userId },
+      select: { productId: true, quantity: true },
     });
-    if (!productExists) {
-      return NextResponse.json(
-        { message: "Product does not exist" },
-        { status: 404 }
-      );
+
+    if (products.length === 0) {
+      return NextResponse.json({ message: "Cart is empty" }, { status: 404 });
     }
-    const addressExists = await prismaDB.orderAddress.findUnique({
-      where: {
-        id: addressId,
-      },
+
+    const userAddress = await prismaDB.orderAddress.create({
+      data: { firstName, lastName, address, city, state, zip, userId: userId },
     });
-    if (!addressExists) {
-      return NextResponse.json(
-        { message: "Address does not exist" },
-        { status: 404 }
-      );
-    }
-    const order = await prismaDB.order.create({
-      data: {
-        quantity,
-        usersId,
-        productId,
-        addressId,
-      },
-    });
-    if (!order) {
-      return NextResponse.json(
-        { message: "Failed to create order" },
-        { status: 500 }
-      );
+
+    for (const product of products) {
+      const productExists = await prismaDB.product.findUnique({
+        where: { id: product.productId },
+      });
+      if (!productExists) continue;
+
+      await prismaDB.order.create({
+        data: {
+          quantity: product.quantity,
+          usersId: userId,
+          productId: product.productId,
+          addressId: userAddress.id,
+        },
+      });
     }
 
     await prismaDB.cart.deleteMany({
-      where: {
-        userId: usersId,
-      },
+      where: { userId: userId },
     });
 
     return NextResponse.json(
-      { message: "Order created successfully, cart cleared" },
+      { message: "Orders and address created successfully, cart cleared" },
       { status: 200 }
     );
   } catch (error) {
