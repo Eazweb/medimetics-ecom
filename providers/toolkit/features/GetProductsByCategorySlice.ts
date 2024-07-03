@@ -2,14 +2,16 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const GetProductsByCategory = createAsyncThunk(
   "GetProductsByCategory",
-  async (category: string, { rejectWithValue }) => {
+  async (category: any, { rejectWithValue }) => {
     try {
-      const response = await fetch("/api/products/get-products-by-category", {
+      const response = await fetch("/api/get-products-by-category", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ category }),
+        body: JSON.stringify({
+          category: category,
+        }),
       });
       if (!response.ok) {
         throw new Error("Failed to fetch products");
