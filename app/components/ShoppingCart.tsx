@@ -1,17 +1,21 @@
 "use client";
 
-import Loader from "@/components/Loader";
-import { DeleteItem } from "@/providers/toolkit/features/DeleteCartItemSlice";
-import { GetCartItems } from "@/providers/toolkit/features/GetUserAllCartitems";
+import { useState, useEffect } from "react";
+import Image from "next/image";
+import { useSession } from "next-auth/react";
+import { Link } from "next-view-transitions";
+import { TrashIcon, ShoppingCartIcon } from "lucide-react";
 import {
   useAppDispatch,
   useAppSelector,
 } from "@/providers/toolkit/hooks/hooks";
-import { TrashIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { Link } from "next-view-transitions";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import { GetCartItems } from "@/providers/toolkit/features/GetUserAllCartitems";
+import { DeleteItem } from "@/providers/toolkit/features/DeleteCartItemSlice";
+import Loader from "@/components/Loader";
+import { motion, AnimatePresence } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
 interface Product {
   id: string;
@@ -36,6 +40,7 @@ type RootState = {
     };
   };
 };
+
 const ShoppingCart = () => {
   const { data: session } = useSession();
   const dispatch = useAppDispatch();
@@ -74,101 +79,132 @@ const ShoppingCart = () => {
     );
     setCartItems(cartItems.filter((item) => item.id !== product.id));
   };
+
   const cartItemsNotEmpty = cartItems.length > 0;
 
   return (
-    <div className="flex flex-col md:flex-row p-4 bg-gray-100 relative">
-      <div className="md:w-3/4 p-4 bg-white rounded-lg shadow-md mb-6 md:mb-0">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">Shopping Cart</h2>
-        {isLoading ? (
-          <div className="w-full items-center justify-center flex">
-            {" "}
-            <Loader />
-          </div>
-        ) : Array.isArray(cartItems) && cartItems.length > 0 ? (
-          cartItems.map((product) => (
-            <div
-              key={product.id}
-              className="flex items-center mb-6 border-b pb-4 last:border-b-0"
-            >
-              <Image
-                width={100}
-                height={100}
-                src={product.product.mainImage}
-                alt={product.product.name}
-                className="w-24 h-24 mr-6 rounded-md object-contain"
-              />
-              <div className="flex-1">
-                <h3 className="text-xl font-semibold text-gray-800 mb-2">
-                  {product.product.name}
-                </h3>
-                {product.color && (
-                  <p className="text-gray-600 mb-1">Color: {product.color}</p>
-                )}
-                {product.size && (
-                  <p className="text-gray-600 mb-1">Size: {product.size}</p>
-                )}
-                <div className="flex justify-between items-center">
-                  <p className="text-gray-600">Quantity: {product.quantity}</p>
-                  <div className="flex items-center">
-                    <p className="text-lg font-semibold text-gray-800 mr-4">
-                      ₹{product.product.price}
-                    </p>
-                    <button
-                      className="text-red-500 hover:text-white hover:bg-red-500 transition-all duration-150 border p-1 border-red-500 rounded"
-                      onClick={() => handleRemoveItem(product)}
-                    >
-                      <TrashIcon size={20} />
-                    </button>
-                  </div>
-                </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="container mx-auto px-4 py-8"
+    >
+      <h1 className="text-4xl font-bold mb-8 text-gray-800 flex items-center">
+        <ShoppingCartIcon className="mr-4" size={36} />
+        Shopping Cart
+      </h1>
+      <div className="flex flex-col lg:flex-row gap-8">
+        <Card className="lg:w-2/3">
+          <CardContent className="p-6">
+            {isLoading ? (
+              <div className="flex justify-center items-center h-64">
+                <Loader />
               </div>
+            ) : Array.isArray(cartItems) && cartItems.length > 0 ? (
+              <AnimatePresence>
+                {cartItems.map((product) => (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className="flex flex-col sm:flex-row items-center gap-6 mb-6 pb-6 border-b last:border-b-0"
+                  >
+                    <Image
+                      width={120}
+                      height={120}
+                      src={product.product.mainImage}
+                      alt={product.product.name}
+                      className="w-24 h-24 object-contain rounded-md shadow-md"
+                    />
+                    <div className="flex-1 w-full">
+                      <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                        {product.product.name}
+                      </h3>
+                      {product.color && (
+                        <p className="text-gray-600 mb-1">
+                          Color: {product.color}
+                        </p>
+                      )}
+                      {product.size && (
+                        <p className="text-gray-600 mb-1">
+                          Size: {product.size}
+                        </p>
+                      )}
+                      <div className="flex justify-between items-center mt-4">
+                        <p className="text-gray-600">
+                          Quantity: {product.quantity}
+                        </p>
+                        <div className="flex items-center space-x-4">
+                          <p className="text-lg font-semibold text-gray-800">
+                            ₹{product.product.price}
+                          </p>
+                          <Button
+                            variant="destructive"
+                            size="icon"
+                            onClick={() => handleRemoveItem(product)}
+                          >
+                            <TrashIcon className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
+            ) : (
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="text-gray-600 text-xl flex items-center justify-center font-bold h-64"
+              >
+                Your cart is empty.
+              </motion.p>
+            )}
+          </CardContent>
+        </Card>
+        <Card className="lg:w-1/3">
+          <CardHeader>
+            <CardTitle>Order Summary</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-4">
+              <div className="flex justify-between">
+                <span>Subtotal</span>
+                <span>₹{totalAmount}</span>
+              </div>
+              <div className="flex justify-between">
+                <span>Shipping</span>
+                <span>₹99</span>
+              </div>
+              <Separator />
+              <div className="flex justify-between text-lg font-bold">
+                <span>Total</span>
+                <span>₹{totalAmount + 99}</span>
+              </div>
+              <Link
+                href={
+                  session?.user
+                    ? `/checkout?totalAmount=${totalAmount}&shipping=99&Id=${userId}`
+                    : "login"
+                }
+              >
+                <button
+                  className={`w-full ${
+                    cartItemsNotEmpty
+                      ? "bg-black hover:bg-gray-800"
+                      : "bg-gray-400"
+                  } text-white py-2 mt-2 rounded-md text-lg font-semibold transition duration-300`}
+                  disabled={!cartItemsNotEmpty}
+                >
+                  Proceed to Checkout
+                </button>
+              </Link>
             </div>
-          ))
-        ) : (
-          <p className="text-gray-600 text-xl flex items-center justify-center font-bold w-full">
-            No items in the cart.
-          </p>
-        )}
+          </CardContent>
+        </Card>
       </div>
-      <div className="md:w-1/4 p-4 bg-white rounded-lg shadow-md md:ml-6">
-        <h2 className="text-3xl font-bold mb-6 text-gray-800">
-          Payment Summary
-        </h2>
-        <div className="text-lg mb-4">
-          <div className="flex justify-between mb-2">
-            <span>Subtotal:</span>
-            <span>₹{totalAmount}</span>
-          </div>
-          <div className="flex justify-between mb-2">
-            <span>Shipping:</span>
-            <span>₹99</span>
-          </div>
-          <div className="flex justify-between text-xl font-bold">
-            <span>Total:</span>
-            <span>₹{totalAmount + 99}</span>
-          </div>
-        </div>
-        <Link
-          href={
-            session?.user
-              ? `/checkout?totalAmount=${totalAmount}&shipping=99&Id=${userId}`
-              : "login"
-          }
-        >
-          <button
-            className={`w-full ${
-              cartItemsNotEmpty
-                ? "bg-blue-600 hover:bg-blue-700"
-                : "bg-gray-400"
-            } text-white py-3 px-4 rounded-md text-lg font-semibold transition duration-300`}
-            disabled={!cartItemsNotEmpty}
-          >
-            Proceed to Checkout
-          </button>
-        </Link>
-      </div>
-    </div>
+    </motion.div>
   );
 };
 
