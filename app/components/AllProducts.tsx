@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState, useMemo } from "react";
 import ProductCard from "@/app/components/ProductCard";
-import { Grid, List, Search } from "lucide-react";
+import { Grid, List, Search, Menu } from "lucide-react";
 import { useGetAllProductsQuery } from "@/providers/toolkit/features/GetAllProductsSlice";
 import ProductsSkeletons from "@/app/temp/ProductsSkeletons";
 import {
@@ -31,6 +31,7 @@ const AllProduct = ({ cat }: { cat?: { cate: string } }) => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [sortOption, setSortOption] = useState<string>("1");
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const dispatch = useAppDispatch();
   const productData = useAppSelector((state) => state.category);
   const { data, error, isLoading } = useGetAllProductsQuery();
@@ -43,13 +44,9 @@ const AllProduct = ({ cat }: { cat?: { cate: string } }) => {
 
   const sortedAndFilteredProducts = useMemo(() => {
     let products = cat?.cate ? productData.products : data || [];
-
-    // Filter products based on search term
     products = products.filter((product) =>
       product.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-
-    // Sort products
     return [...products].sort((a, b) => {
       switch (sortOption) {
         case "2":
@@ -70,56 +67,75 @@ const AllProduct = ({ cat }: { cat?: { cate: string } }) => {
     return <ProductsSkeletons />;
   }
 
+  const NavContent = () => (
+    <>
+      <div className="flex items-center gap-2">
+        <Button
+          variant={viewMode === "grid" ? "default" : "outline"}
+          size="icon"
+          onClick={() => setViewMode("grid")}
+        >
+          <Grid className="h-4 w-4" />
+        </Button>
+        <Button
+          variant={viewMode === "list" ? "default" : "outline"}
+          size="icon"
+          onClick={() => setViewMode("list")}
+        >
+          <List className="h-4 w-4" />
+        </Button>
+      </div>
+      <div className="flex items-center gap-2">
+        <Input
+          type="text"
+          placeholder="Search products..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full sm:w-auto"
+        />
+        <Button size="icon">
+          <Search className="h-4 w-4" />
+        </Button>
+      </div>
+      <Select value={sortOption} onValueChange={setSortOption}>
+        <SelectTrigger className="w-[180px]">
+          <SelectValue placeholder="Sort by" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="1">Sort by</SelectItem>
+          <SelectItem value="2">Price: Low to High</SelectItem>
+          <SelectItem value="3">Price: High to Low</SelectItem>
+          <SelectItem value="4">Name: A to Z</SelectItem>
+          <SelectItem value="5">Name: Z to A</SelectItem>
+        </SelectContent>
+      </Select>
+    </>
+  );
+
   return (
     <div className="w-full flex flex-col">
-      <div className="flex flex-col sm:flex-row w-full items-center justify-between p-4 bg-gray-100 rounded-lg shadow z-50 sticky top-0 gap-4">
-        <div className="flex items-center w-full sm:w-auto">
+      <div className="flex flex-col w-full items-start justify-between p-4 bg-gray-100 rounded-lg shadow z-50 sticky top-0 gap-4">
+        <div className="flex items-center justify-between w-full">
           <span className="font-semibold text-gray-800">
             {cat?.cate ? `Products in ${cat.cate}` : "All Products"}
           </span>
+          <Button
+            variant="outline"
+            size="icon"
+            className="sm:hidden"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <Menu className="h-4 w-4" />
+          </Button>
         </div>
-        <div className="flex flex-wrap gap-3 items-center justify-between w-full sm:w-auto">
-          <div className="flex items-center gap-2">
-            <Button
-              variant={viewMode === "grid" ? "default" : "outline"}
-              size="icon"
-              onClick={() => setViewMode("grid")}
-            >
-              <Grid className="h-4 w-4" />
-            </Button>
-            <Button
-              variant={viewMode === "list" ? "default" : "outline"}
-              size="icon"
-              onClick={() => setViewMode("list")}
-            >
-              <List className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="flex items-center gap-2">
-            <Input
-              type="text"
-              placeholder="Search products..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full sm:w-auto"
-            />
-            <Button size="icon">
-              <Search className="h-4 w-4" />
-            </Button>
-          </div>
-          <Select value={sortOption} onValueChange={setSortOption}>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Sort by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">Sort by</SelectItem>
-              <SelectItem value="2">Price: Low to High</SelectItem>
-              <SelectItem value="3">Price: High to Low</SelectItem>
-              <SelectItem value="4">Name: A to Z</SelectItem>
-              <SelectItem value="5">Name: Z to A</SelectItem>
-            </SelectContent>
-          </Select>
+        <div className="hidden sm:flex flex-wrap gap-3 items-center justify-between w-full">
+          <NavContent />
         </div>
+        {isMenuOpen && (
+          <div className="sm:hidden flex flex-col gap-3 items-start w-full">
+            <NavContent />
+          </div>
+        )}
       </div>
       <div
         className={`p-4 z-30 ${
