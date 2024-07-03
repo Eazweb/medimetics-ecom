@@ -9,6 +9,7 @@ const categories = [
       "https://images.unsplash.com/photo-1550995694-3f5f4a7e1bd2?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     altText: "men-image",
     blurDataURL: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...",
+    link: "/category/man",
   },
   {
     label: "Women",
@@ -16,6 +17,7 @@ const categories = [
       "https://images.unsplash.com/photo-1469334031218-e382a71b716b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     altText: "women-image",
     blurDataURL: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...",
+    link: "/category/women",
   },
   {
     label: "Children",
@@ -23,6 +25,7 @@ const categories = [
       "https://images.unsplash.com/photo-1541580621-cb65cc53084b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     altText: "children-image",
     blurDataURL: "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD...",
+    link: "/category/children",
   },
 ];
 
@@ -42,7 +45,7 @@ const Category = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
           {categories.map((category, index) => (
             <Link
-              href={"/"}
+              href={category.link}
               key={index}
               className="relative group rounded-lg overflow-hidden shadow-md transition-transform duration-300 hover:scale-105"
             >
