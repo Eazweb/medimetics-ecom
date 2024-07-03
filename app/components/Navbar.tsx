@@ -107,7 +107,7 @@ const Navbar = () => {
               </li>
               <li>
                 <Link
-                  href="/"
+                  href="/category"
                   onClick={() => setIsOpen(false)}
                   className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
                 >
