@@ -1,5 +1,7 @@
+import CateComp from "@/app/components/CateComp";
+
 const page = ({ params }: any) => {
-  return <div>{params.cate}</div>;
+  return <CateComp cat={params} />;
 };
 export const generateMetadata = ({ params }: any) => {
   return {
