@@ -1,6 +1,6 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, Menu, X } from "lucide-react";
 import { Link } from "next-view-transitions";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -11,15 +11,16 @@ import { useToast } from "@/components/ui/use-toast";
 interface User {
   isAdmin: boolean;
 }
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [currentMessageIndex, setCurrentMessageIndex] = useState(0);
   const toggleDropdown = () => setIsOpen(!isOpen);
   const { data: session } = useSession();
   const { toast } = useToast();
+  const router = useRouter();
 
-  const Admin =
-    session && session.user ? (session.user as User).isAdmin : false;
+  const Admin = session?.user ? (session.user as User).isAdmin : false;
 
   const messages = [
     "Free shipping on orders over ₹399!",
@@ -36,134 +37,79 @@ const Navbar = () => {
     return () => clearInterval(interval);
   }, [messages.length]);
 
-  const router = useRouter();
+  const NavLink = ({
+    href,
+    children,
+  }: {
+    href: string;
+    children: React.ReactNode;
+  }) => (
+    <Link
+      href={href}
+      className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-gray-700 transition-colors duration-200"
+      onClick={() => setIsOpen(false)}
+    >
+      {children}
+    </Link>
+  );
 
   return (
-    <>
-      <div className="w-full p-1 text-center bg-gradient-to-r from-indigo-800 to-black">
-        <span className="text-sm sm:text-sm tracking-widest font-semibold glowing-text">
+    <div className="sticky top-0 z-50 bg-white shadow-md">
+      <div className="w-full p-2 text-center bg-gradient-to-r from-indigo-800 to-black">
+        <span className="text-xs sm:text-sm tracking-widest font-semibold text-white animate-pulse">
           {messages[currentMessageIndex]}
         </span>
       </div>
-      <nav className="bg-white border-b-2 md:border-none">
-        <div className="max-w-screen-xl mx-auto flex items-center justify-between flex-wrap">
+      <nav className="max-w-screen-xl mx-auto px-4">
+        <div className="flex items-center justify-between py-3">
           <Link
             href="/"
-            className="flex items-center"
+            className="flex items-center space-x-2"
             onClick={() => setIsOpen(false)}
           >
-            <Image src="/logo.png" alt="logo" width={70} height={50} />
-            <span className="md:text-lg font-semibold text-gray-900">
+            <Image
+              src="/logo.png"
+              alt="logo"
+              width={50}
+              height={50}
+              className="w-auto h-8 sm:h-10"
+            />
+            <span className="text-lg font-semibold text-gray-900">
               Smart Shop
             </span>
           </Link>
-          <button
-            onClick={toggleDropdown}
-            className="inline-flex items-center p-2 text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 m-2"
-            aria-controls="navbar-default"
-            aria-expanded={isOpen}
-          >
-            <span className="sr-only">Open main menu</span>
-            <svg
-              className="w-5 h-5"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 17 14"
-            >
-              <path
-                stroke="currentColor"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M1 1h15M1 7h15M1 13h15"
-              />
-            </svg>
-          </button>
-          <div
-            className={`w-full md:flex md:w-auto ${
-              isOpen ? "block" : "hidden"
-            }`}
-            id="navbar-default"
-          >
-            <ul className="font-medium flex flex-col p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-200 md:flex-row md:space-x-8 md:mt-0 md:border-none md:bg-white">
-              <li>
-                <Link
-                  href="/"
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products"
-                  onClick={() => setIsOpen(false)}
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
-                >
-                  Shop
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/category"
-                  onClick={() => setIsOpen(false)}
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
-                >
-                  Category
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href={`${session && session?.user ? "/order" : "/login"}`}
-                  onClick={() => setIsOpen(false)}
-                  className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
-                >
-                  Order
-                </Link>
-              </li>
-              {Admin && (
-                <li>
-                  <Link
-                    href={`${
-                      session && session?.user ? "/dashboard" : "/login"
-                    }`}
-                    onClick={() => setIsOpen(false)}
-                    className="block py-2 px-3 text-gray-900 rounded hover:bg-gray-100 md:hover:bg-transparent md:border-none md:hover:text-gray-700"
-                  >
-                    Dashboard
-                  </Link>
-                </li>
-              )}
-            </ul>
+          <div className="hidden md:flex items-center space-x-4">
+            <NavLink href="/">Home</NavLink>
+            <NavLink href="/products">Shop</NavLink>
+            <NavLink href="/category">Category</NavLink>
+            <NavLink href={session?.user ? "/order" : "/login"}>Order</NavLink>
+            {Admin && (
+              <NavLink href={session?.user ? "/dashboard" : "/login"}>
+                Dashboard
+              </NavLink>
+            )}
           </div>
-          <div className="flex items-center">
-            {session && session?.user ? (
+          <div className="flex items-center space-x-4">
+            {session?.user ? (
               <>
                 <ShoppingBag
                   size={24}
-                  className=" mx-2 cursor-pointer hover:text-gray-700"
+                  className="cursor-pointer hover:text-gray-700 transition-colors duration-200"
                   onClick={() => {
                     router.push("/cart");
                     setIsOpen(false);
                   }}
                 />
                 <Button
-                  className="m-2"
+                  className="hidden md:inline-flex"
                   onClick={() => {
-                    signOut({
-                      callbackUrl: "/login",
-                    });
+                    signOut({ callbackUrl: "/login" });
                     toast({
                       title: "Success",
                       description: "Logged out successfully",
                       duration: 3000,
                       variant: "default",
-                      style: {
-                        backgroundColor: "#191919",
-                        color: "#fff",
-                      },
+                      style: { backgroundColor: "#191919", color: "#fff" },
                     });
                   }}
                 >
@@ -171,14 +117,59 @@ const Navbar = () => {
                 </Button>
               </>
             ) : (
-              <Link href="/login" className=" items-center justify-center m-2">
+              <Link href="/login" className="hidden md:inline-flex">
                 <Button>Login</Button>
               </Link>
             )}
+            <button
+              onClick={toggleDropdown}
+              className="md:hidden p-2 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 transition-colors duration-200"
+              aria-label="Toggle menu"
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
           </div>
         </div>
+        {isOpen && (
+          <div className="md:hidden">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+              <NavLink href="/">Home</NavLink>
+              <NavLink href="/products">Shop</NavLink>
+              <NavLink href="/category">Category</NavLink>
+              <NavLink href={session?.user ? "/order" : "/login"}>
+                Order
+              </NavLink>
+              {Admin && (
+                <NavLink href={session?.user ? "/dashboard" : "/login"}>
+                  Dashboard
+                </NavLink>
+              )}
+              {session?.user ? (
+                <Button
+                  className="w-full text-left"
+                  onClick={() => {
+                    signOut({ callbackUrl: "/login" });
+                    toast({
+                      title: "Success",
+                      description: "Logged out successfully",
+                      duration: 3000,
+                      variant: "default",
+                      style: { backgroundColor: "#191919", color: "#fff" },
+                    });
+                  }}
+                >
+                  Logout
+                </Button>
+              ) : (
+                <Link href="/login" className="block">
+                  <Button className="w-full">Login</Button>
+                </Link>
+              )}
+            </div>
+          </div>
+        )}
       </nav>
-    </>
+    </div>
   );
 };
 
