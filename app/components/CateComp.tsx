@@ -1,10 +1,14 @@
+import { Link } from "next-view-transitions";
 import Image from "next/image";
 import React from "react";
 
 const CateComp = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 overflow-hidden">
-      <div className="relative bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-card-foreground p-8 sm:p-10 md:p-20 lg:p-36 rounded-xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all transform hover:scale-105 duration-300">
+      <Link
+        href={"/category/men"}
+        className="relative bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 text-card-foreground p-8 sm:p-10 md:p-20 lg:p-36 rounded-xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all transform hover:scale-105 duration-300"
+      >
         <Image
           width={2070}
           height={1000}
@@ -18,8 +22,11 @@ const CateComp = () => {
             Showcase Your Style with the Latest Trends
           </h2>
         </div>
-      </div>
-      <div className="relative bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-card-foreground p-8 sm:p-10 md:p-20 lg:p-36 rounded-xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all transform hover:scale-105 duration-300">
+      </Link>
+      <Link
+        href={"/category/women"}
+        className="relative bg-gradient-to-r from-green-400 via-blue-500 to-purple-600 text-card-foreground p-8 sm:p-10 md:p-20 lg:p-36 rounded-xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all transform hover:scale-105 duration-300"
+      >
         <Image
           width={2070}
           height={1000}
@@ -33,8 +40,11 @@ const CateComp = () => {
             Explore Our Women&apos;s Fashion Collection
           </h2>
         </div>
-      </div>
-      <div className="relative bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 text-card-foreground p-8 sm:p-10 md:p-20 lg:p-36 col-span-1 md:col-span-2 rounded-xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all transform hover:scale-105 duration-300">
+      </Link>
+      <Link
+        href={"/category/children"}
+        className="relative bg-gradient-to-r from-yellow-400 via-orange-500 to-red-600 text-card-foreground p-8 sm:p-10 md:p-20 lg:p-36 col-span-1 md:col-span-2 rounded-xl overflow-hidden shadow-2xl hover:shadow-3xl transition-all transform hover:scale-105 duration-300"
+      >
         <Image
           width={2070}
           height={1000}
@@ -48,7 +58,7 @@ const CateComp = () => {
             Discover the Latest in Children&apos;s Fashion
           </h2>
         </div>
-      </div>
+      </Link>
     </div>
   );
 };
