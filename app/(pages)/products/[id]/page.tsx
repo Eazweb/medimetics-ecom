@@ -1,5 +1,7 @@
 "use client";
+
 import React, { useEffect, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import SingleProductSkeleton from "@/app/temp/SingleProductSkeleton";
 import { useGetProductByIdQuery } from "@/providers/toolkit/features/GetAllProductsSlice";
 import { useParams, useRouter } from "next/navigation";
@@ -15,6 +17,7 @@ import { AddToCart } from "@/providers/toolkit/features/AddToCartSlice";
 interface SessionUser {
   id: string;
 }
+
 const ProductPage = () => {
   const { id } = useParams<{ id: string }>();
   const { data, error, isLoading } = useGetProductByIdQuery(id);
@@ -28,6 +31,7 @@ const ProductPage = () => {
   const { push } = useRouter();
   const { toast } = useToast();
   const dispatch = useAppDispatch();
+
   const handlers = useSwipeable({
     onSwipedLeft: () =>
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length),
@@ -99,7 +103,13 @@ const ProductPage = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 md:flex">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+      className="container mx-auto p-4 md:flex"
+    >
       {/* Image and thumbnail section */}
       <div className="md:w-1/2">
         <div
@@ -133,62 +143,76 @@ const ProductPage = () => {
           ))}
         </div>
       </div>
-      {/* Product details section */}
-      <div className="md:w-1/2 md:pl-8">
-        <h1 className="text-3xl font-bold mb-4">{name}</h1>
-        <p className="mb-4">{description}</p>
-        <Badge className="mb-4">
-          {data.categories.map((category) => (
-            <span key={category.id}>{category.name}</span>
-          ))}
-        </Badge>
 
-        <p className="text-2xl font-semibold">₹{price}</p>
+      {/* Product details section */}
+      <motion.div
+        className="md:w-1/2 md:pl-8"
+        initial={{ x: 50, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        <h1 className="text-3xl font-bold mb-4">{name}</h1>
+        <p className="mb-4 text-gray-600">{description}</p>
+        <div className="mb-4 flex flex-wrap gap-2">
+          {data.categories.map((category) => (
+            <Badge key={category.id} variant="secondary">
+              {category.name}
+            </Badge>
+          ))}
+        </div>
+
+        <p className="text-2xl font-semibold mb-6">₹{price}</p>
 
         {/* Color selection */}
         {colors && colors.length > 0 && (
-          <div className="mb-4">
+          <div className="mb-6">
             <h2 className="font-semibold mb-2">Color</h2>
-            <div className="flex space-x-2">
+            <div className="flex flex-wrap gap-2">
               {colors.map((color, index) => (
-                <button
+                <motion.button
                   key={index}
-                  className={`w-8 h-8 rounded-full border-2 ${
+                  className={`w-10 h-10 rounded-full border-2 ${
                     selectedColor === color
-                      ? "border-blue-500"
+                      ? "border-blue-500 ring-2 ring-blue-300"
                       : "border-gray-300"
                   }`}
                   style={{ backgroundColor: color }}
                   onClick={() => setSelectedColor(color)}
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                   aria-label={`Select color ${color}`}
                 />
               ))}
             </div>
           </div>
         )}
+
         {/* Size selection */}
         {sizes && sizes.length > 0 && (
-          <div className="mb-4">
+          <div className="mb-6">
             <h2 className="font-semibold mb-2">Size</h2>
-            <div className="flex space-x-2">
+            <div className="flex flex-wrap gap-2">
               {sizes.map((size, index) => (
-                <button
+                <motion.button
                   key={index}
                   className={`px-4 py-2 border-2 rounded ${
                     selectedSize === size
-                      ? "border-blue-500"
+                      ? "border-blue-500 bg-blue-50"
                       : "border-gray-300"
                   }`}
                   onClick={() => setSelectedSize(size)}
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   {size}
-                </button>
+                </motion.button>
               ))}
             </div>
           </div>
         )}
+
         {/* Quantity input */}
-        <div className="mb-4">
+        <div className="mb-6">
           <label htmlFor="quantity" className="block font-semibold mb-2">
             Quantity
           </label>
@@ -206,15 +230,18 @@ const ProductPage = () => {
             ))}
           </select>
         </div>
-        <Button
-          onClick={handleAddToCart}
-          className="text-white px-6 py-2 rounded"
-          disabled={isAddingToCart}
-        >
-          {isAddingToCart ? "Adding..." : "Add to Cart"}
-        </Button>
-      </div>
-    </div>
+
+        <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+          <Button
+            onClick={handleAddToCart}
+            className="w-full text-white px-6 py-3 rounded text-lg"
+            disabled={isAddingToCart}
+          >
+            {isAddingToCart ? "Adding..." : "Add to Cart"}
+          </Button>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 };
 
