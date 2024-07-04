@@ -56,7 +56,7 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="bg-gray-200 text-white p-6  shadow-lg">
+    <div className="bg-gray-100 text-white p-6  shadow-lg">
       <h1 className="text-3xl font-bold mb-6 text-black">Dashboard</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
