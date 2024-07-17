@@ -7,6 +7,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useAppDispatch } from "@/providers/toolkit/hooks/hooks";
 import { registerUser } from "@/providers/toolkit/features/RegisterUserSlice";
+import TestUser from "../(pages)/login/Testuser";
 
 interface SignupProps {
   name: string;
@@ -200,6 +201,7 @@ const RegisterLoginUser = () => {
               {isLogin ? "Sign Up" : "Login"}
             </span>
           </div>
+          <TestUser />
         </form>
       </div>
     </div>
