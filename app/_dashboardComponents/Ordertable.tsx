@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -17,6 +16,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import TableSkeletons from "../temp/TableSkeletons";
 
 interface Product {
@@ -63,6 +68,30 @@ const OrderTable: React.FC = () => {
     };
     getOrders();
   }, []);
+
+  const updateOrderStatus = async (orderId: string, newStatus: string) => {
+    try {
+      const response = await fetch("/api/get-all-orders", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ orderId, status: newStatus }),
+      });
+
+      if (response.ok) {
+        setOrders((prevOrders) =>
+          prevOrders.map((order) =>
+            order.id === orderId ? { ...order, status: newStatus } : order
+          )
+        );
+      } else {
+        console.error("Failed to update order status");
+      }
+    } catch (error) {
+      console.error("Error updating order status:", error);
+    }
+  };
 
   return (
     <Card className="w-full overflow-hidden">
@@ -124,14 +153,43 @@ const OrderTable: React.FC = () => {
                       {order.Product.name}
                     </TableCell>
                     <TableCell className="hidden px-4 py-4 sm:table-cell sm:px-6">
-                      <Badge
-                        className="text-xs"
-                        variant={
-                          order.status === "PENDING" ? "outline" : "secondary"
-                        }
-                      >
-                        {order.status}
-                      </Badge>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger>
+                          <Badge
+                            className="text-xs cursor-pointer"
+                            variant={
+                              order.status === "PENDING"
+                                ? "outline"
+                                : "secondary"
+                            }
+                          >
+                            {order.status}
+                          </Badge>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              updateOrderStatus(order.id, "PENDING")
+                            }
+                          >
+                            PENDING
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              updateOrderStatus(order.id, "COMPLETED")
+                            }
+                          >
+                            COMPLETED
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              updateOrderStatus(order.id, "CANCELLED")
+                            }
+                          >
+                            CANCELLED
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </TableCell>
                     <TableCell className="hidden px-4 py-4 md:table-cell sm:px-6">
                       {new Date(order.createdAt).toLocaleDateString()}
