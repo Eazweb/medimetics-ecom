@@ -14,6 +14,7 @@ interface User {
   state: string;
   zip: string;
 }
+
 const Checkout = ({ data, user }: { data: number; user: User }) => {
   const [scriptLoaded, setScriptLoaded] = useState<boolean>(false);
   const dispatch = useAppDispatch();
@@ -43,9 +44,44 @@ const Checkout = ({ data, user }: { data: number; user: User }) => {
         currency: "INR",
         name: "Shop Smart",
         description: "Payment for the products purchased from Shop Smart",
-        image: "/logo.png",
+        prefill: {
+          name: `${user.first_name} ${user.last_name}`,
+          contact: "", // Add contact if available
+          email: "", // Add email if available
+        },
+        config: {
+          display: {
+            blocks: {
+              upi: {
+                name: "Pay via UPI",
+                instruments: [
+                  {
+                    method: "upi",
+                  },
+                ],
+              },
+              other: {
+                name: "Other Payment Methods",
+                instruments: [
+                  {
+                    method: "card",
+                  },
+                  {
+                    method: "netbanking",
+                  },
+                  {
+                    method: "wallet",
+                  },
+                ],
+              },
+            },
+            sequence: ["block.upi", "block.other"],
+            preferences: {
+              show_default_blocks: true,
+            },
+          },
+        },
         handler: async function () {
-          console.log(user);
           dispatch(
             createAddress({
               userId: user.userId,

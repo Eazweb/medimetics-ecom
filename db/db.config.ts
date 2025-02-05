@@ -16,7 +16,7 @@ prismaDB
   .then(() => {
     console.log("✅ Successfully connected to MongoDB");
   })
-  .catch((error) => {
+  .catch((error:any) => {
     console.error("❌ MongoDB connection error:", error);
     process.exit(1);
   });

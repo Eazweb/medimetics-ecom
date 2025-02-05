@@ -10,10 +10,7 @@ type User = {
   Orders: any;
 };
 
-const baseUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://shop-smart-lilac.vercel.app/api/"
-    : "http://localhost:3000/api/";
+const baseUrl = process.env.NEXT_PUBLIC_API_URL || "/api/";
 
 export const userAPI = createApi({
   reducerPath: "userAPI",
