@@ -3,16 +3,14 @@ import CreateProduct from "@/app/_dashboardComponents/CreateProduct";
 import { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "dashboard add product",
-  description: "dashboard add product page",
+  title: "Add Product",
+  description: "Add a new product to your store",
 };
 
-const AddProduct = () => {
+export default function AddProductPage() {
   return (
-    <div>
+    <div className="p-6">
       <CreateProduct />
     </div>
   );
-};
-
-export default AddProduct;
+}

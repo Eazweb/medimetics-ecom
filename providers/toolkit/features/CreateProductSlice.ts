@@ -12,6 +12,7 @@ export interface ProductState {
   sizes?: string[];
   colors?: string[];
 }
+
 const initialState: ProductState = {
   name: "",
   price: 0,
@@ -34,47 +35,51 @@ export const CreatePro = createAsyncThunk(
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          name: productData?.name,
-          price: productData?.price,
-          description: productData?.description,
-          mainImage: productData?.mainImage,
-          otherImages: productData?.otherImages,
-          userId: productData?.userId,
-          categories: {
-            name: productData.categories,
-          },
-          sizes: productData?.sizes,
-          colors: productData?.colors,
+          name: productData.name,
+          price: productData.price,
+          description: productData.description,
+          mainImage: productData.mainImage[0] || "",
+          otherImages: productData.otherImages[0] || "",
+          userId: productData.userId,
+          categories: productData.categories,
+          sizes: productData.sizes || [],
+          colors: productData.colors || [],
           quantity: 1,
         }),
       });
+
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Product creation failed");
+        throw new Error(data.message || "Product creation failed");
       }
-      const product = await response.json();
-      if (product.message === "Product created successfully") {
-        toast.success("Product created successfully");
-        return product;
-      } else {
-        toast.error("Product creation failed"), product.message;
-      }
-      throw new Error("Product creation failed");
+
+      toast.success("Product created successfully");
+      return data.product;
     } catch (error) {
-      toast.error("Product creation failedc" + error);
-      return rejectWithValue(error);
+      const errorMessage =
+        error instanceof Error ? error.message : "Product creation failed";
+      toast.error(errorMessage);
+      return rejectWithValue(errorMessage);
     }
   }
 );
+
 export const CreateProductSlice = createSlice({
   name: "product",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(CreatePro.pending, (state) => {
+      // Optional: Add loading state handling
+    });
     builder.addCase(CreatePro.fulfilled, (state, action) => {
-      state = action.payload;
+      // Reset state or update as needed
+      return initialState;
     });
     builder.addCase(CreatePro.rejected, (state, action) => {
-      console.log(action.error.message);
+      // Handle error state if needed
+      console.error("Product creation failed:", action.payload);
     });
   },
 });

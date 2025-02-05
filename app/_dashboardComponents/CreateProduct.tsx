@@ -296,27 +296,26 @@ const CreateProduct = () => {
               url={(res) => {
                 setMainImageUrl(res);
               }}
+              value={mainImageUrl}
             />
-            {errors.image && (
-              <p className="text-red-500">Main Image is required.</p>
-            )}
           </div>
         </CardContent>
         <CardContent>
           <div className="grid gap-3">
             <Label htmlFor="images">
               Other Images
-              <span className="text-gray-500 text-sm"> (4MB max)</span>
+              <span className="text-gray-500 text-sm">
+                {" "}
+                (Optional, up to 4 images)
+              </span>
             </Label>
             <ImageUpload
               url={(res) => {
-                console.log("res", res);
                 setOtherImageUrls(res);
               }}
+              multiple
+              value={otherImageUrls}
             />
-            {errors.images && (
-              <p className="text-red-500">Other Images are required.</p>
-            )}
           </div>
         </CardContent>
       </Card>
