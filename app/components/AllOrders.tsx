@@ -82,15 +82,15 @@ const AllOrders = () => {
               <Image
                 width={200}
                 height={200}
-                src={order.Product.mainImage}
-                alt={order.Product.name}
+                src={order.Product?.mainImage || '/placeholder-image.jpg'} // Add fallback image
+                alt={order.Product?.name || 'Product'}
                 className="object-contain rounded-md"
               />
             </div>
             <div className="my-4 mt-5">
-              <h2 className="text-xl font-semibold">{order.Product.name}</h2>
+              <h2 className="text-xl font-semibold">{order.Product?.name || 'Loading...'}</h2>
               <p className="text-gray-600">
-                Price: ₹{order.Product.price.toFixed(2)}
+                Price: ₹{order.Product?.price?.toFixed(2) || '0.00'}
               </p>
               <p className="text-gray-600">Quantity: {order.quantity}</p>
             </div>
@@ -106,7 +106,7 @@ const AllOrders = () => {
             </div>
             <div className="mb-4">
               <h3 className="font-semibold">Total Price</h3>
-              <p>₹{(order.Product.price * order.quantity).toFixed(2)}</p>
+              <p>₹{(order.Product?.price * order.quantity || 0).toFixed(2)}</p>
             </div>
             <div>
               <h3 className="font-semibold">Status</h3>
