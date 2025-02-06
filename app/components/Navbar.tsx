@@ -23,11 +23,11 @@ const Navbar = () => {
   const Admin = session?.user ? (session.user as User).isAdmin : false;
 
   const messages = [
-    "Free shipping on orders over ₹399!",
-    "20% off your first purchase!",
+    "Free shipping on ordering 3 items!",
+    "Free shipping on all combos!",
     "New arrivals every week!",
     "Exclusive deals for members only!",
-    "Shop the latest trends with us!",
+    "Shop the best products with us!",
   ];
 
   useEffect(() => {
@@ -74,14 +74,11 @@ const Navbar = () => {
               height={50}
               className="w-auto h-8 sm:h-10"
             />
-            <span className="text-lg font-semibold text-gray-900">
-              Smart Shop
-            </span>
           </Link>
           <div className="hidden md:flex items-center space-x-4">
             <NavLink href="/">Home</NavLink>
             <NavLink href="/products">Shop</NavLink>
-            <NavLink href="/category">Category</NavLink>
+            {/* <NavLink href="/category">Category</NavLink> */}
             <NavLink href={session?.user ? "/order" : "/login"}>Order</NavLink>
             {Admin && (
               <NavLink href={session?.user ? "/dashboard" : "/login"}>

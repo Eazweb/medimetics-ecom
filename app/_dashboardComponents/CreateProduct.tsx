@@ -64,7 +64,7 @@ const CreateProduct = () => {
   const { data: session } = useSession() as { data: Session };
 
   const sizes: Size = {
-    size: ["S", "M", "L", "XL", "XXL"],
+    size: ["50 ml", "100 ml", "150 ml", "200 ml", "250 ml", "300 ml"],
   };
 
   const colors: Color = {
@@ -170,19 +170,14 @@ const CreateProduct = () => {
           <div className="grid gap-6 sm:grid-cols-3">
             <div className="grid gap-3">
               <Label htmlFor="category">Category</Label>
-              <Select
-                {...register("category")}
-                onValueChange={(value) => setCategory(value)}
-              >
-                <SelectTrigger id="category" aria-label="Select category">
-                  <SelectValue placeholder="Select category" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="man">Man</SelectItem>
-                  <SelectItem value="woman">Woman</SelectItem>
-                  <SelectItem value="children">Children</SelectItem>
-                </SelectContent>
-              </Select>
+              <Input
+                id="category"
+                type="text"
+                className="w-full"
+                placeholder="Enter product category"
+                {...register("category", { required: true })}
+                onChange={(e) => setCategory(e.target.value)}
+              />
               {errors.category && (
                 <p className="text-red-500">Category is required.</p>
               )}

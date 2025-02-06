@@ -1,46 +1,61 @@
 import Image from "next/image";
+import Link from "next/link";
+import { Star, ShoppingCart } from "lucide-react";
 import ToastCartButton from "./ToastCartButton";
-import { Link } from "next-view-transitions";
 
 type Product = {
   id: number;
   name: string;
   price: number;
+  prevPrice?: number;
   mainImage: string;
   otherImages: string;
+  numReviews?: number;
+  brand?: string;
 };
+
 const ProductCard = ({ product }: { product: Product }) => {
   return (
-    <div className="w-full mx-auto my-8">
-      <div className="relative overflow-hidden rounded-lg shadow-lg group">
-        <Link
-          href={`/products/${product.id}`}
-          className="w-full h-84 overflow-hidden"
-        >
+    <div className="bg-white transition-shadow w-full max-w-[350px] group">
+      <Link href={`/products/${product.id}`}>
+        <div className="relative w-full aspect-square">
           <Image
-            width={1000}
-            height={1200}
             src={product.mainImage}
             alt={product.name}
-            className="w-full h-full object-cover transition-transform duration-100 ease-in-out group-hover:opacity-0"
+            fill
+            className="object-cover rounded-2xl"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
-          <Image
-            width={1000}
-            height={1200}
-            src={product.otherImages}
-            alt={product.name}
-            className="w-full h-full object-cover absolute top-0 left-0 transition-opacity duration-100 ease-in-out opacity-0 group-hover:opacity-100"
-          />
-        </Link>
-        <div className="absolute bottom-0 left-0 w-full p-4 bg-gradient-to-t from-black via-transparent to-transparent group-hover:opacity-100 transition-opacity duration-100 ease-in-out opacity-100">
-          <h2 className="text-muted-foreground  md:text-xl font-bold">
-            {product.name}
-          </h2>
-          <p className="text-muted-foreground text-lg font-semibold">
-            ₹{product.price}
-          </p>
-          <ToastCartButton product={product} />
         </div>
+      </Link>
+      <div className="py-4">
+        <Link href={`/products/${product.id}`}>
+          <h3 className="text-xl mb-2 group-hover:text-green-400 transition-colors line-clamp-2">
+            {product.name.toUpperCase()}
+          </h3>
+        </Link>
+        <div className="flex items-center justify-between mb-2">
+          <div className="flex items-end gap-3 text-2xl font-bold">
+            ₹{product.price}
+            {product.prevPrice && (
+              <span className="line-through text-lg">₹{product.prevPrice}</span>
+            )}
+          </div>
+          {product.numReviews && (
+            <div className="flex items-center">
+              <div className="flex gap-1 font-semibold text-lg items-center">
+                5 <Star className="w-5 h-5 text-yellow-600 fill-yellow-500" />
+              </div>
+              <span className="ml-2 text-sm text-gray-600">
+                ({product.numReviews} reviews)
+              </span>
+            </div>
+          )}
+        </div>
+        {product.brand && (
+          <p className="text-sm text-gray-600 mb-4">{product.brand}</p>
+        )}
+        <ToastCartButton product={product} />
       </div>
     </div>
   );
