@@ -70,8 +70,8 @@ const Navbar = () => {
             <Image
               src="/logo.png"
               alt="logo"
-              width={50}
-              height={50}
+              width={300}
+              height={300}
               className="w-auto h-8 sm:h-10"
             />
           </Link>

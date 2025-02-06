@@ -44,7 +44,8 @@ interface Order {
   id: string;
   createdAt: string;
   status: string;
-  Product: Product;
+  Product?: Product;  // Make Product optional
+  product?: Product;  // Add lowercase product
   address: Address;
   user: User;
 }
@@ -150,7 +151,7 @@ const OrderTable: React.FC = () => {
                       <div className="text-sm">{order.address.address}</div>
                     </TableCell>
                     <TableCell className="hidden px-4 py-4 lg:table-cell sm:px-6">
-                      {order.Product.name}
+                      {order.Product?.name || order.product?.name}
                     </TableCell>
                     <TableCell className="hidden px-4 py-4 sm:table-cell sm:px-6">
                       <DropdownMenu>
@@ -195,7 +196,7 @@ const OrderTable: React.FC = () => {
                       {new Date(order.createdAt).toLocaleDateString()}
                     </TableCell>
                     <TableCell className="px-4 py-4 text-right sm:px-6">
-                      ₹{order.Product.price.toFixed(2)}
+                      ₹{(order.Product?.price || order.product?.price || 0).toFixed(2)}
                     </TableCell>
                   </TableRow>
                 ))
