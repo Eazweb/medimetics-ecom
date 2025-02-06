@@ -69,7 +69,7 @@ const AllProduct = ({ cat }: { cat?: { cate: string } }) => {
 
   const NavContent = () => (
     <>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 px-[5%]">
         <Button
           variant={viewMode === "grid" ? "default" : "outline"}
           size="icon"
@@ -85,7 +85,7 @@ const AllProduct = ({ cat }: { cat?: { cate: string } }) => {
           <List className="h-4 w-4" />
         </Button>
       </div>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 px-[5%]">
         <Input
           type="text"
           placeholder="Search products..."
@@ -113,7 +113,7 @@ const AllProduct = ({ cat }: { cat?: { cate: string } }) => {
   );
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="w-full flex flex-col px-[5%]">
       <div className="flex flex-col w-full items-start justify-between p-4 bg-gray-100 rounded-lg shadow z-50 sticky top-0 gap-4">
         <div className="flex items-center justify-between w-full">
           <span className="font-semibold text-gray-800">

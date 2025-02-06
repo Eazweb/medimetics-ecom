@@ -10,6 +10,7 @@ type Product = {
   price: number;
   mainImage: string;
   otherImages: string;
+  sizes?: string[];
 };
 
 const HomeProducts = () => {
@@ -41,16 +42,23 @@ const HomeProducts = () => {
     );
 
   return (
-    <div className="mx-10 grid p-3 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4">
-      {randomProducts.length > 0 ? (
-        randomProducts.map((product, index) => (
-          <ProductCard key={index} product={product} />
-        ))
-      ) : (
-        <h1 className="text-2xl font-bold text-center text-gray-400">
-          No products found
-        </h1>
-      )}
+    <div className="w-full  mx-auto"> {/* Increased width on mobile */}
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-1 md:gap-6 py-8">
+        {randomProducts.length > 0 ? (
+          randomProducts.map((product, index) => (
+            <div
+              key={index}
+              className="flex flex-col bg-white p-3" // Removed border, shadow, and adjusted padding
+            >
+              <ProductCard product={product} />
+            </div>
+          ))
+        ) : (
+          <h1 className="text-2xl font-bold text-center text-gray-400 col-span-full">
+            No products found
+          </h1>
+        )}
+      </div>
     </div>
   );
 };
