@@ -93,6 +93,14 @@ export const authOptions: NextAuthOptions = {
       }
       return session as ExtendedSession;
     },
+
+    redirect: async ({ url, baseUrl }) => {
+      const allowedDomains = process.env.ALLOWED_SITES?.split(',') || [];
+      if (allowedDomains.some(domain => url.startsWith(domain.trim()))) {
+        return url;
+      }
+      return baseUrl;
+    },
   },
   secret: process.env.NEXTAUTH_SECRET,
   session: {

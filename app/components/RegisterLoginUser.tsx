@@ -201,7 +201,7 @@ const RegisterLoginUser = () => {
               {isLogin ? "Sign Up" : "Login"}
             </span>
           </div>
-          <TestUser />
+          {/* <TestUser /> */}
         </form>
       </div>
     </div>
