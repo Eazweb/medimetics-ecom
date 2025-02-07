@@ -1,5 +1,4 @@
-"use client";
-
+"use client"
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
@@ -16,6 +15,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
 
 interface Product {
   id: string;
@@ -50,6 +51,10 @@ const ShoppingCart = () => {
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [isFromIndia, setIsFromIndia] = useState<string>(""); // "" | "yes" | "no"
+
+  const shippingPrice =
+    isFromIndia === "yes" ? 50 : isFromIndia === "no" ? 1000 : 0;
 
   useEffect(() => {
     setCartItems(cartItemsFromStore);
@@ -173,29 +178,49 @@ const ShoppingCart = () => {
                 <span>Subtotal</span>
                 <span>₹{totalAmount}</span>
               </div>
+
+              <div className="mb-4">
+                <h4 className="font-medium mb-2">Are you from India?</h4>
+                <RadioGroup
+                  value={isFromIndia}
+                  onValueChange={setIsFromIndia}
+                  className="flex flex-col space-y-2"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="yes" id="india" />
+                    <Label htmlFor="india">Yes</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="no" id="international" />
+                    <Label htmlFor="international">No</Label>
+                  </div>
+                </RadioGroup>
+              </div>
+
               <div className="flex justify-between">
                 <span>Shipping</span>
-                <span>₹99</span>
+                <span>₹{shippingPrice}</span>
               </div>
+
               <Separator />
               <div className="flex justify-between text-lg font-bold">
                 <span>Total</span>
-                <span>₹{totalAmount + 99}</span>
+                <span>₹{totalAmount + shippingPrice}</span>
               </div>
               <Link
                 href={
                   session?.user
-                    ? `/checkout?totalAmount=${totalAmount}&shipping=99&Id=${userId}`
+                    ? `/checkout?totalAmount=${totalAmount}&shipping=${shippingPrice}&Id=${userId}`
                     : "login"
                 }
               >
                 <button
                   className={`w-full ${
-                    cartItemsNotEmpty
+                    cartItemsNotEmpty && isFromIndia
                       ? "bg-black hover:bg-gray-800"
                       : "bg-gray-400"
                   } text-white py-2 mt-2 rounded-md text-lg font-semibold transition duration-300`}
-                  disabled={!cartItemsNotEmpty}
+                  disabled={!cartItemsNotEmpty || !isFromIndia}
                 >
                   Proceed to Checkout
                 </button>
