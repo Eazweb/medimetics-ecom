@@ -35,7 +35,7 @@ const ProductCard = ({ product }: { product: Product }) => {
       <div className="flex flex-col flex-grow p-4">
         {/* Product Name with Link */}
         <Link href={`/products/${product.id}`}>
-          <h3 className="text-md md:text-2xl lg:text-3xl font-medium line-clamp-2 hover:text-green-400 transition-colors">
+          <h3 className="text-md md:text-2xl font-light line-clamp-2 hover:text-green-400 transition-colors">
             {product.name.toUpperCase()}
           </h3>
         </Link>

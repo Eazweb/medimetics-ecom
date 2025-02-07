@@ -111,7 +111,24 @@ const ProductPage = () => {
       className="container mx-auto p-4 md:flex"
     >
       {/* Image and thumbnail section */}
-      <div className="md:w-1/2">
+      <div className="md:w-1/2 md:flex md:space-x-4 my-4">
+        <div className="hidden md:flex md:flex-col md:space-y-2">
+          {images.map((image, index) => (
+            <Image
+              key={index}
+              width={100}
+              height={100}
+              src={image}
+              alt="Product thumbnail"
+              className={`w-24 h-24 rounded object-contain cursor-pointer ${
+                currentIndex === index ? "ring-2 ring-blue-500" : ""
+              }`}
+              onClick={() => setCurrentIndex(index)}
+              loading="lazy"
+            />
+          ))}
+        </div>
+
         <div
           {...handlers}
           className="w-full h-auto mb-4 rounded overflow-hidden"
@@ -126,7 +143,7 @@ const ProductPage = () => {
           />
         </div>
 
-        <div className="flex space-x-2">
+        <div className="flex space-x-2 md:hidden">
           {images.map((image, index) => (
             <Image
               key={index}
@@ -134,7 +151,7 @@ const ProductPage = () => {
               height={100}
               src={image}
               alt="Product thumbnail"
-              className={`w-24 h-24 rounded object-contain ${
+              className={`w-24 h-24 rounded object-contain cursor-pointer ${
                 currentIndex === index ? "ring-2 ring-blue-500" : ""
               }`}
               onClick={() => setCurrentIndex(index)}
@@ -151,8 +168,8 @@ const ProductPage = () => {
         animate={{ x: 0, opacity: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
       >
-        <h1 className="text-3xl font-bold mb-4">{name}</h1>
-        <p className="mb-4 text-gray-600">{description}</p>
+        <h1 className="text-3xl font-light my-4">{name}</h1>
+
         <div className="mb-4 flex flex-wrap gap-2">
           {data.categories.map((category) => (
             <Badge key={category.id} variant="secondary">
@@ -211,24 +228,40 @@ const ProductPage = () => {
           </div>
         )}
 
-        {/* Quantity input */}
+        {/* Quantity input with plus and minus */}
         <div className="mb-6">
           <label htmlFor="quantity" className="block font-semibold mb-2">
             Quantity
           </label>
-          <select
-            id="quantity"
-            value={quantity}
-            onChange={(e) => setQuantity(Number(e.target.value))}
-            className="w-20 border border-gray-300 rounded p-2 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-            aria-describedby="quantityHelp"
-          >
-            {[1, 2, 3, 4, 5].map((num) => (
-              <option key={num} value={num}>
-                {num}
-              </option>
-            ))}
-          </select>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
+              className="w-8 h-8 border border-gray-300 rounded text-lg flex items-center justify-center hover:bg-gray-100"
+              aria-label="Decrease quantity"
+            >
+              -
+            </button>
+            <input
+              id="quantity"
+              type="number"
+              value={quantity}
+              onChange={(e) => setQuantity(Math.max(Number(e.target.value), 1))}
+              className="w-16 text-center border border-gray-300 rounded p-1 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              min="1"
+              aria-label="Quantity"
+              style={{
+                appearance: "none", // Remove default buttons
+                MozAppearance: "textfield", // For Firefox
+              }}
+            />
+            <button
+              onClick={() => setQuantity((prev) => prev + 1)}
+              className="w-8 h-8 border border-gray-300 rounded text-lg flex items-center justify-center hover:bg-gray-100"
+              aria-label="Increase quantity"
+            >
+              +
+            </button>
+          </div>
         </div>
 
         <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -240,6 +273,8 @@ const ProductPage = () => {
             {isAddingToCart ? "Adding..." : "Add to Cart"}
           </Button>
         </motion.div>
+
+        <p className="mt-6 text-gray-600 text-sm font-light">{description}</p>
       </motion.div>
     </motion.div>
   );

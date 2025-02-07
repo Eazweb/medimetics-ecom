@@ -38,7 +38,6 @@ export default function Problems() {
         <h2 className="text-3xl font-bold text-center mb-10 text-[#a7c957]">
           Common Skin Problems
         </h2>
-
         {/* Large Screens - Single row, 6 items */}
         <div className="hidden lg:grid lg:grid-cols-6 gap-6">
           {skinProblems.slice(0, 6).map((problem) => (

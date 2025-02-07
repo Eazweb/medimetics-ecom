@@ -48,7 +48,7 @@ const ToastCartButton = ({ product }: any) => {
   return (
     <button
       onClick={handleClick}
-      className="mt-4 py-2 px-4 bg-black text-white rounded-lg flex items-center justify-center hover:bg-gray-900  sm:w-auto"
+      className="mt-4 py-3 px-4 bg-[#a7c957] text-white rounded-full flex items-center justify-center hover:bg-gray-900  sm:w-auto"
       disabled={isLoading}
     >
       {isLoading ? (

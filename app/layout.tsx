@@ -13,9 +13,9 @@ import ScrollToTopButton from "./components/TopScroller";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Shop Smart",
+  title: "Medimetics",
   description:
-    "A full-featured e-commerce application where users can browse products, add them to a cart, and make purchases.",
+    "Hello pretty faces, your one and only stop for facial care products.",
 };
 
 export default function RootLayout({
