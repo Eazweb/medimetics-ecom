@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 
 interface Product {
   id: string;
+  productId: string;
   product: {
     name: string;
     mainImage: string;
@@ -51,7 +52,7 @@ const ShoppingCart = () => {
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [cartItems, setCartItems] = useState<Product[]>([]);
-  const [isFromIndia, setIsFromIndia] = useState<string>(""); // "" | "yes" | "no"
+  const [isFromIndia, setIsFromIndia] = useState<string>("");
 
   const shippingPrice =
     isFromIndia === "yes" ? 50 : isFromIndia === "no" ? 1000 : 0;
@@ -123,9 +124,12 @@ const ShoppingCart = () => {
                       className="w-24 h-24 object-contain rounded-md shadow-md"
                     />
                     <div className="flex-1 w-full">
-                      <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                      <Link
+                        href={`/products/${product.productId}`}
+                        className="text-xl font-semibold text-gray-800 mb-2 hover:text-gray-600 transition-colors duration-200"
+                      >
                         {product.product.name}
-                      </h3>
+                      </Link>
                       {product.color && (
                         <p className="text-gray-600 mb-1">
                           Color: {product.color}
