@@ -61,30 +61,18 @@ const Footer = () => {
               </span>
               <div className="flex items-center mt-3 space-x-3">
                 <a
-                  href="https://wa.me/message/3BKOF3I2XU4NA1"
+                  href="https://wa.me/+919115557179"
                   target="_blank"
                   className="text-gray-400 transition-colors duration-300 hover:text-deep-purple-accent-400"
                 >
-                  <Image
-                    src="/footerwhatsapp.svg"
-                    width={25}
-                    height={25}
-                    className="filter invert"
-                    alt=""
-                  />
+                 WhatsApp
                 </a>
                 <a
-                  href="https://www.instagram.com/gymbelts.leverbelts?igsh=MXF5M3d6dHcwcm00OA=="
+                  href="https://www.instagram.com/realmedimetics?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                   target="_blank"
                   className="text-gray-400 transition-colors duration-300 hover:text-deep-purple-accent-400"
                 >
-                  <Image
-                    src="/footerinstagram.svg"
-                    width={25}
-                    height={25}
-                    className="filter invert"
-                    alt=""
-                  />
+                 Instagram
                 </a>
                 <a
                   href="/faq"
