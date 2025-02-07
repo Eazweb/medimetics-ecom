@@ -95,7 +95,7 @@ const ShoppingCart = () => {
       exit={{ opacity: 0 }}
       className="container mx-auto px-4 py-8"
     >
-      <h1 className="text-4xl font-bold mb-8 text-gray-800 flex items-center">
+      <h1 className="text-4xl  mb-8 text-gray-600 flex items-center">
         <ShoppingCartIcon className="mr-4" size={36} />
         Shopping Cart
       </h1>
@@ -121,12 +121,12 @@ const ShoppingCart = () => {
                       height={120}
                       src={product.product.mainImage}
                       alt={product.product.name}
-                      className="w-24 h-24 object-contain rounded-md shadow-md"
+                      className="w-24 h-24 object-cover rounded-md shadow-md"
                     />
                     <div className="flex-1 w-full">
                       <Link
                         href={`/products/${product.productId}`}
-                        className="text-xl font-semibold text-gray-800 mb-2 hover:text-gray-600 transition-colors duration-200"
+                        className="text-xl font-light text-gray-800 mb-2 hover:text-gray-600 transition-colors duration-200"
                       >
                         {product.product.name}
                       </Link>
@@ -136,8 +136,8 @@ const ShoppingCart = () => {
                         </p>
                       )}
                       {product.size && (
-                        <p className="text-gray-600 mb-1">
-                          Size: {product.size}
+                        <p className="text-gray-600 mb- text-sm px-2 py-1 bg-gray-200 w-fit rounded-full">
+                          {product.size}
                         </p>
                       )}
                       <div className="flex justify-between items-center mt-4">

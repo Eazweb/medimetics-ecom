@@ -47,7 +47,7 @@ const Footer = () => {
             <div className="flex">
               <p className="mr-1 text-gray-300">Email:</p>
               <a
-                href="mailto:info@lorem.mail"
+                href="mailto:medimetics6@gmail.com"
                 aria-label="Our email"
                 title="Our email"
                 className="transition-colors duration-300  text-gray-300 hover:text-gray-400"
@@ -65,14 +65,14 @@ const Footer = () => {
                   target="_blank"
                   className="text-gray-400 transition-colors duration-300 hover:text-deep-purple-accent-400"
                 >
-                 WhatsApp
+                  WhatsApp
                 </a>
                 <a
                   href="https://www.instagram.com/realmedimetics?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
                   target="_blank"
                   className="text-gray-400 transition-colors duration-300 hover:text-deep-purple-accent-400"
                 >
-                 Instagram
+                  Instagram
                 </a>
                 <a
                   href="/faq"
